@@ -11,9 +11,9 @@ data class Item(
 
 val items = listOf(
     Item(R.drawable.jeans1, R.string.jeans1),
-    Item(R.drawable.jeans1, R.string.jeans1),
-    Item(R.drawable.jeans1, R.string.jeans1),
-    Item(R.drawable.jeans1, R.string.jeans1),
+    Item(R.drawable.shoes1, R.string.shoes1),
+    Item(R.drawable.jacket1, R.string.jacket1),
+    Item(R.drawable.hoodie1, R.string.hoodie1),
     Item(R.drawable.jeans1, R.string.jeans1),
     Item(R.drawable.jeans1, R.string.jeans1),
     Item(R.drawable.jeans1, R.string.jeans1)

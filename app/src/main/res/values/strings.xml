@@ -2,4 +2,7 @@
     <string name="app_name">VirtualCloset</string>
     <string name="home_title">Closet</string>
     <string name="jeans1">Pepe Jeans</string>
+    <string name="shoes1">Nike Dunks</string>
+    <string name="jacket1">Carhartt Jacket</string>
+    <string name="hoodie1">Vintage Hoodie</string>
 </resources>
