@@ -11,10 +11,14 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.outlined.Home
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -65,13 +69,25 @@ fun BottomNav(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(color = Color.Black)
+            .background(color = MaterialTheme.colors.surface)
             .height(60.dp),
         verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
     ) {
-        Text(
-            text = stringResource(id = R.string.home_title),
-            color = Color.White
+        BottomNavButton(Icons.Filled.Home)
+        BottomNavButton(Icons.Filled.AccountBox)
+        BottomNavButton(Icons.Filled.Favorite)
+    }
+}
+
+@Composable
+fun BottomNavButton(icon: ImageVector) {
+    IconButton(onClick = { /*TODO*/ }) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(40.dp),
+            tint = Color.White
         )
     }
 }
