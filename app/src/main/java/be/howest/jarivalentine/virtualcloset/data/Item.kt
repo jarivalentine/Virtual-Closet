@@ -18,3 +18,7 @@ val items = listOf(
     Item(R.drawable.jeans1, R.string.jeans1),
     Item(R.drawable.jeans1, R.string.jeans1)
 )
+
+val tags = listOf(
+    "Shorts", "Pants", "Shoes", "T-Shirt", "Hoodie", "Sweater", "Jacket"
+)

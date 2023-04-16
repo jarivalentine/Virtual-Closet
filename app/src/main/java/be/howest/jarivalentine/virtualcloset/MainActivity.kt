@@ -14,6 +14,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.*
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -52,6 +53,11 @@ fun VirtualClosetApp() {
     Scaffold(
         bottomBar = {
             BottomNav()
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /* ... */ }, backgroundColor = Color.Black) {
+                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add", tint = Color.White)
+            }
         }
     ) {
         ItemScreen()
@@ -64,7 +70,7 @@ fun BottomNav(modifier: Modifier = Modifier) {
         modifier = modifier
             .fillMaxWidth()
             .background(Color.Black)
-            .height(60.dp),
+            .height(70.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -80,7 +86,7 @@ fun BottomNavButton(icon: ImageVector) {
         Icon(
             imageVector = icon,
             contentDescription = null,
-            modifier = Modifier.size(40.dp),
+            modifier = Modifier.size(35.dp),
             tint = Color.White
         )
     }
