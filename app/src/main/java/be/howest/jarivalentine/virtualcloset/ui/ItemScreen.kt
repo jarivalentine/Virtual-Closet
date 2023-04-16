@@ -10,10 +10,7 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
-import androidx.compose.material.Card
-import androidx.compose.material.Icon
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
@@ -72,13 +69,19 @@ fun FilterTags() {
             FilterTag(it)
         }
     }
+    Divider(color = Color.Black, thickness = 2.dp)
 }
 
 @Composable
 fun FilterTag(name: String) {
     Box(
         modifier = Modifier
-            .padding(vertical = 10.dp, horizontal = 5.dp)
+            .padding(
+                start = 10.dp,
+                top = 10.dp,
+                bottom = 10.dp,
+                end = if (name == tags.last()) 10.dp else 0.dp
+            )
             .background(shape = Shapes.small, color = Color.Black)
     ) {
         Text(

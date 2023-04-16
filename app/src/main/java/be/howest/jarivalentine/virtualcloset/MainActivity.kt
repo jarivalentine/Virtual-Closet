@@ -75,6 +75,7 @@ fun BottomNav(modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         BottomNavButton(Icons.Filled.Home)
+        BottomNavButton(Icons.Filled.Search)
         BottomNavButton(Icons.Filled.AccountBox)
         BottomNavButton(Icons.Filled.Favorite)
     }
