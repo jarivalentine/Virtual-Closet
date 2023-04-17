@@ -64,7 +64,6 @@ fun BottomNav(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.Black)
             .height(70.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
@@ -83,7 +82,6 @@ fun BottomNavButton(icon: ImageVector) {
             imageVector = icon,
             contentDescription = null,
             modifier = Modifier.size(35.dp),
-            tint = Color.White
         )
     }
 }
@@ -96,7 +94,7 @@ fun MainContent() {
             TopBar(title = R.string.create_title)
         },
     ) {
-        CreateScreen()
+        ItemScreen()
     }
 }
 
@@ -105,7 +103,6 @@ fun TopBar(modifier: Modifier = Modifier, @StringRes title: Int) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .background(Color.Black)
             .height(60.dp),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
@@ -130,7 +127,6 @@ fun TopBarMenu() {
 fun TopBarTitle(@StringRes title: Int) {
     Text(
         text = stringResource(title),
-        color = Color.White,
         fontSize = 24.sp,
         modifier = Modifier.padding(end = 20.dp)
     )

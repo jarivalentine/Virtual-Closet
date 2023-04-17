@@ -41,14 +41,12 @@ fun ItemScreen() {
 
 @Composable
 fun FilterTags() {
-    LazyRow(
-        modifier = Modifier.background(Color.White)
-    ) {
+    LazyRow() {
         items(tags) {
             FilterTag(it)
         }
     }
-    Divider(color = Color.Black, thickness = 2.dp)
+    Divider(thickness = 2.dp)
 }
 
 @Composable
@@ -61,7 +59,7 @@ fun FilterTag(name: String) {
                 bottom = 10.dp,
                 end = if (name == tags.last()) 10.dp else 0.dp
             )
-            .background(shape = Shapes.small, color = Color.Black)
+            .background(shape = Shapes.small, color = MaterialTheme.colors.background)
     ) {
         Text(
             modifier = Modifier.padding(5.dp),
@@ -74,7 +72,6 @@ fun FilterTag(name: String) {
 fun ClosetItems() {
     LazyVerticalGrid(
         modifier = Modifier
-            .background(Color.White)
             .padding(bottom = 70.dp)
             .fillMaxSize(),
         columns = GridCells.Fixed(2)
@@ -91,9 +88,7 @@ fun ClosetItem(item: Item, modifier: Modifier = Modifier) {
         modifier = modifier.padding(10.dp),
         elevation = 8.dp
     ) {
-        Column(
-            modifier = Modifier.background(Color.Black)
-        ) {
+        Column() {
             ClosetItemImage(item)
             ClosetItemText(item.name)
         }
@@ -114,15 +109,6 @@ fun ClosetItemImage(item: Item) {
 fun ClosetItemText(@StringRes name: Int) {
     Text(
         text = stringResource(id = name),
-        color = Color.White,
         modifier = Modifier.padding(5.dp)
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-    VirtualClosetTheme {
-        ItemScreen()
-    }
 }

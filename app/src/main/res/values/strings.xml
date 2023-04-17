@@ -9,4 +9,6 @@
     <string name="menu">Menu</string>
     <string name="create_title">create item</string>
     <string name="image_button">upload image</string>
+    <string name="cancel">cancel</string>
+    <string name="next">create</string>
 </resources>
