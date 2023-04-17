@@ -50,8 +50,8 @@ fun VirtualClosetApp() {
             BottomNav()
         },
 /*        floatingActionButton = {
-            FloatingActionButton(onClick = { *//* ... *//* }, backgroundColor = Color.Black) {
-                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add", tint = Color.White)
+            FloatingActionButton(onClick = { }) {
+                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add")
             }
         }*/
     ) {
@@ -94,7 +94,7 @@ fun MainContent() {
             TopBar(title = R.string.create_title)
         },
     ) {
-        ItemScreen()
+        CreateScreen()
     }
 }
 
