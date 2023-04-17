@@ -31,32 +31,11 @@ import be.howest.jarivalentine.virtualcloset.data.tags
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun ItemScreen(modifier: Modifier = Modifier) {
-    Scaffold(
-        topBar = {
-            TopBar()
-        }
-    ) {
-        Column {
-            FilterTags()
-            ClosetItems()
-        }
-    }
-}
-
-@Composable
-fun ClosetItems() {
-    LazyVerticalGrid(
-        modifier = Modifier
-            .background(Color.White)
-            .padding(bottom = 70.dp),
-        columns = GridCells.Fixed(2)
-    ) {
-        items(items) {
-            ClosetItem(item = it)
-        }
+fun ItemScreen() {
+    Column {
+        FilterTags()
+        ClosetItems()
     }
 }
 
@@ -92,28 +71,17 @@ fun FilterTag(name: String) {
 }
 
 @Composable
-fun TopBar(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .background(Color.Black)
-            .height(60.dp),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+fun ClosetItems() {
+    LazyVerticalGrid(
+        modifier = Modifier
+            .background(Color.White)
+            .padding(bottom = 70.dp)
+            .fillMaxSize(),
+        columns = GridCells.Fixed(2)
     ) {
-        Icon(
-            Icons.Rounded.Menu,
-            stringResource(R.string.menu),
-            modifier = Modifier
-                .padding(start = 10.dp)
-                .size(40.dp)
-        )
-        Text(
-            text = stringResource(R.string.item_screen_title),
-            color = Color.White,
-            fontSize = 24.sp,
-            modifier = Modifier.padding(end = 20.dp)
-        )
+        items(items) {
+            ClosetItem(item = it)
+        }
     }
 }
 
@@ -155,6 +123,6 @@ fun ClosetItemText(@StringRes name: Int) {
 @Composable
 fun DefaultPreview() {
     VirtualClosetTheme {
-        VirtualClosetApp()
+        ItemScreen()
     }
 }
