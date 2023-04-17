@@ -7,12 +7,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.unit.dp
+import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.tags
 
 @Composable
@@ -82,7 +86,9 @@ fun DropdownTextField(selectedItem: String, isExpanded: Boolean) {
     TextField(
         value = selectedItem,
         onValueChange = {},
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(bottom = 10.dp),
         readOnly = true,
         colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Black,
@@ -103,5 +109,14 @@ fun DropdownTextField(selectedItem: String, isExpanded: Boolean) {
 
 @Composable
 fun ImageUploadButton() {
-    TODO("Not yet implemented")
+    Button(
+        onClick = { /*TODO*/ },
+        modifier = Modifier
+    ) {
+        Icon(imageVector = Icons.Filled.Add, contentDescription = "Upload icon")
+        Text(
+            text = stringResource(R.string.image_button),
+            modifier = Modifier.padding(start = 10.dp)
+        )
+    }
 }
