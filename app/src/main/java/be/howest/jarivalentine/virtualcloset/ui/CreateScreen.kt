@@ -34,22 +34,8 @@ fun CreateScreen() {
 
 @Composable
 fun ItemNameTextField() {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
-    TextField(
-        value = text,
-        onValueChange = { text = it },
-        modifier = Modifier
-            .fillMaxWidth(),
-/*        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Black,
-            focusedIndicatorColor = Color.Gray,
-            cursorColor = Color.White,
-            unfocusedLabelColor = Color.Gray,
-            focusedLabelColor = Color.Gray
-        ),*/
-        label = { Text(text = "item name") },
-        singleLine = true
-    )
+    var text by remember { mutableStateOf("") }
+    InputField(text) { text = it }
 }
 
 @OptIn(ExperimentalMaterialApi::class)

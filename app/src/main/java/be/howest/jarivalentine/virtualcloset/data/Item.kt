@@ -22,3 +22,7 @@ val items = listOf(
 val tags = listOf(
     "Shorts", "Pants", "Shoes", "T-Shirt", "Hoodie", "Sweater", "Jacket"
 )
+
+val outfits = listOf(
+    "Summer fit"
+)

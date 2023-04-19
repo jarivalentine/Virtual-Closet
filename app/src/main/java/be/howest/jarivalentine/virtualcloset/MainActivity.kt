@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarivalentine.virtualcloset.ui.ItemScreen
 import be.howest.jarivalentine.virtualcloset.ui.CreateScreen
+import be.howest.jarivalentine.virtualcloset.ui.OutfitScreen
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
 class MainActivity : ComponentActivity() {
@@ -94,7 +95,7 @@ fun MainContent() {
             TopBar(title = R.string.create_title)
         },
     ) {
-        CreateScreen()
+        OutfitScreen()
     }
 }
 

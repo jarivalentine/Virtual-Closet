@@ -11,4 +11,5 @@
     <string name="image_button">upload image</string>
     <string name="cancel">cancel</string>
     <string name="next">create</string>
+    <string name="text_name">item name</string>
 </resources>
