@@ -12,4 +12,7 @@
     <string name="cancel">cancel</string>
     <string name="next">create</string>
     <string name="text_name">item name</string>
+    <string name="search">search</string>
+    <string name="outfit1">Blue Nike Fit</string>
+    <string name="outfit2"><![CDATA[All Star, Denim & Green Jacket]]></string>
 </resources>
