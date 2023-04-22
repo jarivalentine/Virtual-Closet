@@ -50,13 +50,16 @@ fun VirtualClosetApp() {
         bottomBar = {
             BottomNav()
         },
+        topBar = {
+            TopBar(title = R.string.create_title)
+        },
 /*        floatingActionButton = {
             FloatingActionButton(onClick = { }) {
                 Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add")
             }
         }*/
     ) {
-        MainContent()
+        OutfitScreen()
     }
 }
 
@@ -84,18 +87,6 @@ fun BottomNavButton(icon: ImageVector) {
             contentDescription = null,
             modifier = Modifier.size(35.dp),
         )
-    }
-}
-
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun MainContent() {
-    Scaffold(
-        topBar = {
-            TopBar(title = R.string.create_title)
-        },
-    ) {
-        OutfitScreen()
     }
 }
 

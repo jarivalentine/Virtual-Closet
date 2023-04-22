@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -53,7 +54,8 @@ fun SearchField() {
         value = text,
         onValueChange = { text = it },
         modifier = Modifier
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .height(50.dp),
 /*        colors = TextFieldDefaults.textFieldColors(
             backgroundColor = Color.Black,
             focusedIndicatorColor = Color.Gray,
@@ -86,10 +88,11 @@ fun Outfits() {
 @Composable
 fun Outfit(outfit: Outfit) {
     Card {
-        Column(
+        val configuration = LocalConfiguration.current
+        val screenHeight = configuration.screenHeightDp.dp
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(bottom = 20.dp)
         ) {
             Image(
                 painter = painterResource(id = outfit.imageResourceId),
@@ -98,16 +101,20 @@ fun Outfit(outfit: Outfit) {
                 ),
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
-                    .height(LocalConfiguration.current.screenHeightDp.dp - 320.dp),
+                    .height(screenHeight - 240.dp),
                 contentScale = ContentScale.Crop
             )
             Row(
                 modifier = Modifier
-                    .padding(10.dp)
-                    .width(LocalConfiguration.current.screenWidthDp.dp - 30.dp),
+                    .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
+                    .align(Alignment.BottomStart)
+                    .background(Color.DarkGray.copy(alpha = 0.5f)),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                Column() {
+                Column(
+                    modifier = Modifier
+                        .padding(10.dp)
+                ) {
                     Text(text = stringResource(id = outfit.name), fontSize = 20.sp)
                     Labels()
                 }
@@ -115,7 +122,8 @@ fun Outfit(outfit: Outfit) {
                     imageVector = Icons.Filled.MoreVert,
                     contentDescription = "More",
                     modifier = Modifier
-                        .size(30.dp)
+                        .size(50.dp)
+                        .padding(10.dp)
                 )
             }
         }
@@ -161,7 +169,7 @@ fun SlidingCarousel(
 ) {
     val isDragged by pagerState.interactionSource.collectIsDraggedAsState()
 
-    Box(
+    Column(
         modifier = modifier.fillMaxWidth(),
     ) {
         HorizontalPager(count = itemsCount, state = pagerState) { page ->
@@ -169,8 +177,8 @@ fun SlidingCarousel(
         }
         Surface(
             modifier = Modifier
-                .padding(bottom = 8.dp)
-                .align(Alignment.BottomCenter),
+                .padding(vertical = 10.dp)
+                .align(Alignment.CenterHorizontally),
             shape = CircleShape,
             color = Color.Black.copy(alpha = 0.5f)
         ) {
