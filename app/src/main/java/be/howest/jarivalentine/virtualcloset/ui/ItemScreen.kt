@@ -46,7 +46,7 @@ fun FilterTags() {
             FilterTag(it)
         }
     }
-    Divider(thickness = 2.dp)
+    Divider(thickness = 1.dp, color = MaterialTheme.colors.primary)
 }
 
 @Composable
@@ -59,11 +59,12 @@ fun FilterTag(name: String) {
                 bottom = 10.dp,
                 end = if (name == tags.last()) 10.dp else 0.dp
             )
-            .background(shape = Shapes.small, color = MaterialTheme.colors.background)
+            .background(shape = Shapes.small, color = MaterialTheme.colors.secondary)
     ) {
         Text(
             modifier = Modifier.padding(5.dp),
-            text = name
+            text = name,
+            color = MaterialTheme.colors.onSecondary,
         )
     }
 }
@@ -88,7 +89,9 @@ fun ClosetItem(item: Item, modifier: Modifier = Modifier) {
         modifier = modifier.padding(10.dp),
         elevation = 8.dp
     ) {
-        Column() {
+        Column(
+            modifier = Modifier.background(MaterialTheme.colors.primaryVariant)
+        ) {
             ClosetItemImage(item)
             ClosetItemText(item.name)
         }
@@ -109,6 +112,7 @@ fun ClosetItemImage(item: Item) {
 fun ClosetItemText(@StringRes name: Int) {
     Text(
         text = stringResource(id = name),
-        modifier = Modifier.padding(5.dp)
+        modifier = Modifier.padding(5.dp),
+        color = MaterialTheme.colors.onPrimary,
     )
 }

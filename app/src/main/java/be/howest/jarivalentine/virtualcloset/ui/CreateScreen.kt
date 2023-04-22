@@ -1,5 +1,6 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -65,19 +66,17 @@ fun ItemTypeDropdown() {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun DropdownTextField(selectedItem: String, isExpanded: Boolean) {
-    TextField(
+    OutlinedTextField(
         value = selectedItem,
         onValueChange = {},
         modifier = Modifier
             .fillMaxWidth(),
         readOnly = true,
-/*        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Black,
-            focusedIndicatorColor = Color.Gray,
-            cursorColor = Color.White,
-            unfocusedLabelColor = Color.Gray,
-            focusedLabelColor = Color.Gray
-        ),*/
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = MaterialTheme.colors.primary,
+            unfocusedLabelColor = MaterialTheme.colors.primary,
+            textColor = MaterialTheme.colors.onSurface
+        ),
         label = { Text(text = "item type") },
         trailingIcon = {
             ExposedDropdownMenuDefaults.TrailingIcon(
@@ -92,10 +91,6 @@ fun DropdownTextField(selectedItem: String, isExpanded: Boolean) {
 fun ImageUploadButton() {
     Button(
         onClick = { /*TODO*/ },
-/*        colors = ButtonDefaults.buttonColors(
-            backgroundColor = Color.Black,
-            contentColor = Color.White
-        ),*/
         modifier = Modifier.height(48.dp)
     ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Upload icon")
@@ -104,7 +99,7 @@ fun ImageUploadButton() {
             modifier = Modifier.padding(start = 15.dp)
         )
     }
-    Text(text = "no image uploaded")
+    Text(text = "no image uploaded", color = MaterialTheme.colors.onSurface)
 }
 
 @Composable
@@ -113,12 +108,20 @@ fun ControlButtons() {
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        OutlinedButton(modifier = Modifier.weight(1f), onClick = { }) {
+        OutlinedButton(
+            modifier = Modifier
+                .weight(1f),
+            onClick = { },
+            colors = ButtonDefaults.outlinedButtonColors(
+                backgroundColor = Color.Transparent,
+            ),
+            border = BorderStroke(1.dp, MaterialTheme.colors.primary)
+        ) {
             Text(stringResource(R.string.cancel))
         }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = {  }
+            onClick = { }
         ) {
             Text(stringResource(R.string.next))
         }

@@ -1,6 +1,7 @@
 package be.howest.jarivalentine.virtualcloset
 
 import android.annotation.SuppressLint
+import android.content.ClipData.Item
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -68,7 +69,8 @@ fun BottomNav(modifier: Modifier = Modifier) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(70.dp),
+            .height(70.dp)
+            .background(MaterialTheme.colors.primary),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
@@ -95,7 +97,8 @@ fun TopBar(modifier: Modifier = Modifier, @StringRes title: Int) {
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(60.dp),
+            .height(60.dp)
+            .background(MaterialTheme.colors.primary),
         verticalAlignment = Alignment.CenterVertically,
         horizontalArrangement = Arrangement.SpaceBetween
     ) {
@@ -124,7 +127,7 @@ fun TopBarTitle(@StringRes title: Int) {
     )
 }
 
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun DefaultPreview() {
     VirtualClosetTheme {

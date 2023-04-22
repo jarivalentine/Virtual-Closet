@@ -2,7 +2,9 @@ package be.howest.jarivalentine.virtualcloset.ui
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
+import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
@@ -56,19 +59,15 @@ fun SearchField() {
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp),
-/*        colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = Color.Black,
-            focusedIndicatorColor = Color.Gray,
-            cursorColor = Color.White,
-            unfocusedLabelColor = Color.Gray,
-            focusedLabelColor = Color.Gray
-        ),*/
         label = { Text(text = stringResource(R.string.search)) },
         singleLine = true,
+        colors = TextFieldDefaults.textFieldColors(
+            textColor = MaterialTheme.colors.onSurface
+        ),
         leadingIcon = {
             Icon(
                 Icons.Filled.Search,
-                contentDescription = "",
+                contentDescription = ""
             )
         }
     )
@@ -108,14 +107,18 @@ fun Outfit(outfit: Outfit) {
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
                     .align(Alignment.BottomStart)
-                    .background(Color.DarkGray.copy(alpha = 0.5f)),
+                    .background(MaterialTheme.colors.surface.copy(alpha = 0.7f)),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
                     modifier = Modifier
                         .padding(10.dp)
                 ) {
-                    Text(text = stringResource(id = outfit.name), fontSize = 20.sp)
+                    Text(
+                        text = stringResource(id = outfit.name),
+                        fontSize = 20.sp,
+                        color = MaterialTheme.colors.onPrimary
+                    )
                     Labels()
                 }
                 Icon(
@@ -123,7 +126,8 @@ fun Outfit(outfit: Outfit) {
                     contentDescription = "More",
                     modifier = Modifier
                         .size(50.dp)
-                        .padding(10.dp)
+                        .padding(10.dp),
+                    tint = MaterialTheme.colors.onBackground
                 )
             }
         }
@@ -148,15 +152,15 @@ fun Label(name: String) {
                 bottom = 10.dp,
                 end = if (name == labels.last()) 10.dp else 0.dp
             )
-            .background(shape = Shapes.small, color = MaterialTheme.colors.background)
+            .background(shape = Shapes.small, color = MaterialTheme.colors.secondary)
     ) {
         Text(
             modifier = Modifier.padding(5.dp),
-            text = name
+            text = name,
+            color = MaterialTheme.colors.onSecondary,
         )
     }
 }
-
 
 
 @OptIn(ExperimentalPagerApi::class)
@@ -180,7 +184,7 @@ fun SlidingCarousel(
                 .padding(vertical = 10.dp)
                 .align(Alignment.CenterHorizontally),
             shape = CircleShape,
-            color = Color.Black.copy(alpha = 0.5f)
+            color = MaterialTheme.colors.primaryVariant
         ) {
             DotsIndicator(
                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
@@ -197,8 +201,8 @@ fun DotsIndicator(
     modifier: Modifier = Modifier,
     totalDots: Int,
     selectedIndex: Int,
-    selectedColor: Color = Color.White,
-    unSelectedColor: Color = Color.Gray,
+    selectedColor: Color = MaterialTheme.colors.onSecondary,
+    unSelectedColor: Color = Color.DarkGray,
     dotSize: Dp
 ) {
     LazyRow(
