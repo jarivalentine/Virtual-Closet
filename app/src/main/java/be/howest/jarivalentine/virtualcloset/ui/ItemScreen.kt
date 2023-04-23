@@ -33,7 +33,10 @@ import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
 @Composable
 fun ItemScreen() {
-    Column {
+    Column(
+        modifier = Modifier
+            .fillMaxHeight()
+    ) {
         FilterTags()
         ClosetItems()
     }
@@ -73,7 +76,6 @@ fun FilterTag(name: String) {
 fun ClosetItems() {
     LazyVerticalGrid(
         modifier = Modifier
-            .padding(bottom = 70.dp)
             .fillMaxSize(),
         columns = GridCells.Fixed(2)
     ) {
@@ -115,4 +117,12 @@ fun ClosetItemText(@StringRes name: Int) {
         modifier = Modifier.padding(5.dp),
         color = MaterialTheme.colors.onPrimary,
     )
+}
+
+@Preview(showBackground = true)
+@Composable
+fun ItemPreview() {
+    VirtualClosetTheme {
+        ItemScreen()
+    }
 }

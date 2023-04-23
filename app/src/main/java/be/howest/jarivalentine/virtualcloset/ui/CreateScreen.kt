@@ -130,7 +130,7 @@ fun ControlButtons() {
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun CreatePreview() {
     VirtualClosetTheme {
         CreateScreen()
     }

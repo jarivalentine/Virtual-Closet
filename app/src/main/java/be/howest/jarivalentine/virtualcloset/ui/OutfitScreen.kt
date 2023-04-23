@@ -100,14 +100,14 @@ fun Outfit(outfit: Outfit) {
                 ),
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
-                    .height(screenHeight - 240.dp),
+                    .height(screenHeight - 250.dp),
                 contentScale = ContentScale.Crop
             )
             Row(
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
                     .align(Alignment.BottomStart)
-                    .background(MaterialTheme.colors.surface.copy(alpha = 0.7f)),
+                    .background(MaterialTheme.colors.onSecondary.copy(alpha = 0.7f)),
                 horizontalArrangement = Arrangement.SpaceBetween
             ) {
                 Column(
@@ -117,7 +117,7 @@ fun Outfit(outfit: Outfit) {
                     Text(
                         text = stringResource(id = outfit.name),
                         fontSize = 20.sp,
-                        color = MaterialTheme.colors.onPrimary
+                        color = MaterialTheme.colors.onSurface
                     )
                     Labels()
                 }
@@ -127,7 +127,7 @@ fun Outfit(outfit: Outfit) {
                     modifier = Modifier
                         .size(50.dp)
                         .padding(10.dp),
-                    tint = MaterialTheme.colors.onBackground
+                    tint = MaterialTheme.colors.onSurface
                 )
             }
         }
