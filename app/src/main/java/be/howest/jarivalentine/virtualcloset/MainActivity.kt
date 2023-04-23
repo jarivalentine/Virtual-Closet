@@ -22,9 +22,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavHostController
+import androidx.navigation.compose.rememberNavController
 import be.howest.jarivalentine.virtualcloset.ui.ItemScreen
 import be.howest.jarivalentine.virtualcloset.ui.CreateScreen
 import be.howest.jarivalentine.virtualcloset.ui.OutfitScreen
+import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
 class MainActivity : ComponentActivity() {
@@ -46,13 +49,17 @@ class MainActivity : ComponentActivity() {
 
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun VirtualClosetApp() {
+fun VirtualClosetApp(
+    modifier: Modifier = Modifier,
+    viewModel: VirtualClosetViewModel = VirtualClosetViewModel(),
+    navController: NavHostController = rememberNavController()
+) {
     Scaffold(
-        bottomBar = {
-            BottomNav()
-        },
         topBar = {
             TopBar(title = R.string.create_title)
+        },
+        bottomBar = {
+            BottomNav()
         },
 /*        floatingActionButton = {
             FloatingActionButton(onClick = { }) {
@@ -60,35 +67,8 @@ fun VirtualClosetApp() {
             }
         }*/
     ) {
+        val uiState by viewModel.uiState.collectAsState()
         OutfitScreen()
-    }
-}
-
-@Composable
-fun BottomNav(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .background(MaterialTheme.colors.primary),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        BottomNavButton(Icons.Filled.Home)
-        BottomNavButton(Icons.Filled.Search)
-        BottomNavButton(Icons.Filled.AccountBox)
-        BottomNavButton(Icons.Filled.Favorite)
-    }
-}
-
-@Composable
-fun BottomNavButton(icon: ImageVector) {
-    IconButton(onClick = { /*TODO*/ }) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(35.dp),
-        )
     }
 }
 
@@ -125,6 +105,34 @@ fun TopBarTitle(@StringRes title: Int) {
         fontSize = 24.sp,
         modifier = Modifier.padding(end = 20.dp)
     )
+}
+
+@Composable
+fun BottomNav(modifier: Modifier = Modifier) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .background(MaterialTheme.colors.primary),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceEvenly
+    ) {
+        BottomNavButton(Icons.Filled.Home)
+        BottomNavButton(Icons.Filled.Search)
+        BottomNavButton(Icons.Filled.AccountBox)
+        BottomNavButton(Icons.Filled.Favorite)
+    }
+}
+
+@Composable
+fun BottomNavButton(icon: ImageVector) {
+    IconButton(onClick = { /*TODO*/ }) {
+        Icon(
+            imageVector = icon,
+            contentDescription = null,
+            modifier = Modifier.size(35.dp),
+        )
+    }
 }
 
 @Preview
