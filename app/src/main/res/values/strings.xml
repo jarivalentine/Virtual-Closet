@@ -15,4 +15,8 @@
     <string name="search">search</string>
     <string name="outfit1">Blue Nike Fit</string>
     <string name="outfit2"><![CDATA[All Star, Denim & Green Jacket]]></string>
+    <string name="item_title">items</string>
+    <string name="create_item_title">create item</string>
+    <string name="create_outfit_title">create outfit</string>
+    <string name="outfit_title">outfits</string>
 </resources>

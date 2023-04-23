@@ -14,6 +14,8 @@ import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,6 +25,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.howest.jarivalentine.virtualcloset.ui.ItemScreen
 import be.howest.jarivalentine.virtualcloset.ui.CreateScreen
@@ -44,101 +47,5 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
-    }
-}
-
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun VirtualClosetApp(
-    modifier: Modifier = Modifier,
-    viewModel: VirtualClosetViewModel = VirtualClosetViewModel(),
-    navController: NavHostController = rememberNavController()
-) {
-    Scaffold(
-        topBar = {
-            TopBar(title = R.string.create_title)
-        },
-        bottomBar = {
-            BottomNav()
-        },
-/*        floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
-                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add")
-            }
-        }*/
-    ) {
-        val uiState by viewModel.uiState.collectAsState()
-        OutfitScreen()
-    }
-}
-
-@Composable
-fun TopBar(modifier: Modifier = Modifier, @StringRes title: Int) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(60.dp)
-            .background(MaterialTheme.colors.primary),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        TopBarMenu()
-        TopBarTitle(title)
-    }
-}
-
-@Composable
-fun TopBarMenu() {
-    Icon(
-        Icons.Rounded.Menu,
-        stringResource(R.string.menu),
-        modifier = Modifier
-            .padding(start = 10.dp)
-            .size(40.dp)
-    )
-}
-
-@Composable
-fun TopBarTitle(@StringRes title: Int) {
-    Text(
-        text = stringResource(title),
-        fontSize = 24.sp,
-        modifier = Modifier.padding(end = 20.dp)
-    )
-}
-
-@Composable
-fun BottomNav(modifier: Modifier = Modifier) {
-    Row(
-        modifier = modifier
-            .fillMaxWidth()
-            .height(70.dp)
-            .background(MaterialTheme.colors.primary),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceEvenly
-    ) {
-        BottomNavButton(Icons.Filled.Home)
-        BottomNavButton(Icons.Filled.Search)
-        BottomNavButton(Icons.Filled.AccountBox)
-        BottomNavButton(Icons.Filled.Favorite)
-    }
-}
-
-@Composable
-fun BottomNavButton(icon: ImageVector) {
-    IconButton(onClick = { /*TODO*/ }) {
-        Icon(
-            imageVector = icon,
-            contentDescription = null,
-            modifier = Modifier.size(35.dp),
-        )
-    }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    VirtualClosetTheme {
-        VirtualClosetApp()
     }
 }
