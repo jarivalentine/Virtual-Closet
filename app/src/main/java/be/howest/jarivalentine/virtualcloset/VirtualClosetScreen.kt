@@ -9,6 +9,7 @@ import androidx.compose.material.icons.filled.AccountBox
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -25,16 +26,15 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import be.howest.jarivalentine.virtualcloset.ui.ItemScreen
-import be.howest.jarivalentine.virtualcloset.ui.OutfitScreen
-import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
+import be.howest.jarivalentine.virtualcloset.ui.*
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
 enum class VirtualClosetScreen(@StringRes val title: Int) {
     Item(title = R.string.item_title),
     CreateItem(title = R.string.create_item_title),
     CreateOutfit(title = R.string.create_outfit_title),
-    Outfit(title = R.string.outfit_title)
+    Outfit(title = R.string.outfit_title),
+    Profile(title = R.string.profile_title)
 }
 
 @Composable
@@ -51,16 +51,18 @@ fun VirtualClosetApp(
 
     Scaffold(
         topBar = {
-            TopBar(title = R.string.create_title)
+            TopBar(title = currentScreen.title)
         },
         bottomBar = {
             BottomNav(navController)
         },
-/*        floatingActionButton = {
-            FloatingActionButton(onClick = { }) {
-                Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add")
+        floatingActionButton = {
+            if (currentScreen == VirtualClosetScreen.Item) {
+                FloatingActionButton(onClick = { navController.navigate(VirtualClosetScreen.CreateItem.name) }) {
+                    Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add")
+                }
             }
-        }*/
+        },
     ) { innerPadding ->
         val uiState by viewModel.uiState.collectAsState()
 
@@ -74,6 +76,15 @@ fun VirtualClosetApp(
             }
             composable(route = VirtualClosetScreen.Outfit.name) {
                 OutfitScreen()
+            }
+            composable(route = VirtualClosetScreen.CreateItem.name) {
+                CreateScreen(
+                    onCancelClick = { navController.popBackStack() },
+                    onCreateClick = { navController.navigate(VirtualClosetScreen.Outfit.name) }
+                )
+            }
+            composable(route = VirtualClosetScreen.Profile.name) {
+                ProfileScreen()
             }
         }
     }
@@ -127,14 +138,11 @@ fun BottomNav(navController: NavHostController, modifier: Modifier = Modifier) {
         BottomNavButton(Icons.Filled.Home) {
             navController.navigate(VirtualClosetScreen.Item.name)
         }
-        BottomNavButton(Icons.Filled.Search) {
-
-        }
-        BottomNavButton(Icons.Filled.AccountBox) {
-
-        }
         BottomNavButton(Icons.Filled.Favorite) {
             navController.navigate(VirtualClosetScreen.Outfit.name)
+        }
+        BottomNavButton(Icons.Filled.AccountBox) {
+            navController.navigate(VirtualClosetScreen.Profile.name)
         }
     }
 }

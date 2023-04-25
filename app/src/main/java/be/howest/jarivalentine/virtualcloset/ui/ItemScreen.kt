@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -25,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.VirtualClosetApp
+import be.howest.jarivalentine.virtualcloset.VirtualClosetScreen
 import be.howest.jarivalentine.virtualcloset.data.Item
 import be.howest.jarivalentine.virtualcloset.data.items
 import be.howest.jarivalentine.virtualcloset.data.tags
