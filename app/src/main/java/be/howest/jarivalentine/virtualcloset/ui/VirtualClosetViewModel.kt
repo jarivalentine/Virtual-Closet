@@ -1,6 +1,5 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
-import be.howest.jarivalentine.virtualcloset.data.VirtualClosetUiState
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
