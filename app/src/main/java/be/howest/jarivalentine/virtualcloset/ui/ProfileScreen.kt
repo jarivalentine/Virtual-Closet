@@ -20,7 +20,9 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ProfileScreen() {
+fun ProfileScreen(
+    viewModel: VirtualClosetViewModel
+) {
     Column(
         modifier = Modifier.padding(16.dp)
     ) {
@@ -102,10 +104,4 @@ fun ProfileActions() {
             Text(text = "Logout")
         }
     }
-}
-
-@Preview
-@Composable
-fun ProfileScreenPreview() {
-    ProfileScreen()
 }

@@ -15,6 +15,8 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,25 +30,31 @@ import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.VirtualClosetApp
 import be.howest.jarivalentine.virtualcloset.VirtualClosetScreen
 import be.howest.jarivalentine.virtualcloset.data.Item
-import be.howest.jarivalentine.virtualcloset.data.items
-import be.howest.jarivalentine.virtualcloset.data.tags
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
+val tags = listOf("All", "Tops", "Bottoms", "Shoes", "Accessories")
+
 @Composable
-fun ItemScreen() {
+fun ItemScreen(
+    viewModel: VirtualClosetViewModel
+) {
+    val uiState by viewModel.virtualClosetUiState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxHeight()
     ) {
         FilterTags()
-        ClosetItems()
+        ClosetItems(
+            items = uiState.itemList
+        )
     }
 }
 
 @Composable
 fun FilterTags() {
-    LazyRow() {
+    LazyRow {
         items(tags) {
             FilterTag(it)
         }
@@ -75,7 +83,7 @@ fun FilterTag(name: String) {
 }
 
 @Composable
-fun ClosetItems() {
+fun ClosetItems(items: List<Item>) {
     LazyVerticalGrid(
         modifier = Modifier
             .fillMaxSize(),
@@ -107,24 +115,16 @@ fun ClosetItemImage(item: Item) {
     Image(
         modifier = Modifier.height(200.dp),
         contentScale = ContentScale.Crop,
-        painter = painterResource(id = item.imageResourceId),
-        contentDescription = stringResource(id = item.name)
+        painter = painterResource(id = R.drawable.hoodie1),
+        contentDescription = item.name
     )
 }
 
 @Composable
-fun ClosetItemText(@StringRes name: Int) {
+fun ClosetItemText(name: String) {
     Text(
-        text = stringResource(id = name),
+        text = name,
         modifier = Modifier.padding(5.dp),
         color = MaterialTheme.colors.onPrimary,
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ItemPreview() {
-    VirtualClosetTheme {
-        ItemScreen()
-    }
 }

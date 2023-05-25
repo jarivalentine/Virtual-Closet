@@ -38,8 +38,8 @@ enum class VirtualClosetScreen(@StringRes val title: Int) {
 
 @Composable
 fun VirtualClosetApp(
+    viewModel: VirtualClosetViewModel,
     modifier: Modifier = Modifier,
-    viewModel: VirtualClosetViewModel = VirtualClosetViewModel(),
     navController: NavHostController = rememberNavController()
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
@@ -63,27 +63,26 @@ fun VirtualClosetApp(
             }
         },
     ) { innerPadding ->
-        val uiState by viewModel.uiState.collectAsState()
-
         NavHost(
             navController = navController,
             startDestination = VirtualClosetScreen.Item.name,
             modifier = modifier.padding(innerPadding)
         ) {
             composable(route = VirtualClosetScreen.Item.name) {
-                ItemScreen()
+                ItemScreen(viewModel)
             }
             composable(route = VirtualClosetScreen.Outfit.name) {
-                OutfitScreen()
+                OutfitScreen(viewModel)
             }
             composable(route = VirtualClosetScreen.CreateItem.name) {
                 CreateScreen(
+                    viewModel,
                     onCancelClick = { navController.popBackStack() },
                     onCreateClick = { navController.navigate(VirtualClosetScreen.Outfit.name) }
                 )
             }
             composable(route = VirtualClosetScreen.Profile.name) {
-                ProfileScreen()
+                ProfileScreen(viewModel)
             }
         }
     }
@@ -154,13 +153,5 @@ fun BottomNavButton(icon: ImageVector, onClick: () -> Unit) {
             contentDescription = null,
             modifier = Modifier.size(35.dp),
         )
-    }
-}
-
-@Preview
-@Composable
-fun DefaultPreview() {
-    VirtualClosetTheme {
-        VirtualClosetApp()
     }
 }

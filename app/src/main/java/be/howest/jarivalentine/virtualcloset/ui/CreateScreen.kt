@@ -17,11 +17,11 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import be.howest.jarivalentine.virtualcloset.R
-import be.howest.jarivalentine.virtualcloset.data.tags
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
 @Composable
 fun CreateScreen(
+    viewModel: VirtualClosetViewModel,
     onCancelClick: () -> Unit,
     onCreateClick: () -> Unit,
 ) {

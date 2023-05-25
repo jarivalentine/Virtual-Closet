@@ -29,16 +29,20 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Outfit
-import be.howest.jarivalentine.virtualcloset.data.labels
-import be.howest.jarivalentine.virtualcloset.data.outfits
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
 
+val labels = listOf("summer", "winter", "spring", "autumn")
+
 @Composable
-fun OutfitScreen() {
+fun OutfitScreen(
+    viewModel: VirtualClosetViewModel
+) {
+    val uiState by viewModel.virtualClosetUiState.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -46,7 +50,9 @@ fun OutfitScreen() {
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         SearchField()
-        Outfits()
+        Outfits(
+            outfits = uiState.outfitList
+        )
     }
 }
 
@@ -75,7 +81,9 @@ fun SearchField() {
 
 @OptIn(ExperimentalPagerApi::class)
 @Composable
-fun Outfits() {
+fun Outfits(
+    outfits: List<Outfit>
+) {
     SlidingCarousel(
         itemsCount = outfits.size,
         itemContent = { index ->
@@ -94,10 +102,8 @@ fun Outfit(outfit: Outfit) {
                 .fillMaxWidth()
         ) {
             Image(
-                painter = painterResource(id = outfit.imageResourceId),
-                contentDescription = stringResource(
-                    id = outfit.name
-                ),
+                painter = painterResource(id = R.drawable.outfit2),
+                contentDescription = outfit.name,
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
                     .height(screenHeight - 250.dp),
@@ -115,7 +121,7 @@ fun Outfit(outfit: Outfit) {
                         .padding(10.dp)
                 ) {
                     Text(
-                        text = stringResource(id = outfit.name),
+                        text = outfit.name,
                         fontSize = 20.sp,
                         color = MaterialTheme.colors.onSurface
                     )
@@ -235,12 +241,4 @@ fun IndicatorDot(
             .clip(CircleShape)
             .background(color)
     )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun OutfitPreview() {
-    VirtualClosetTheme {
-        OutfitScreen()
-    }
 }

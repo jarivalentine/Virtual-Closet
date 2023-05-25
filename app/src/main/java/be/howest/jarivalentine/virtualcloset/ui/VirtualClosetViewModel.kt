@@ -1,18 +1,39 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.update
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.initializer
+import androidx.lifecycle.viewmodel.viewModelFactory
+import be.howest.jarivalentine.virtualcloset.VirtualClosetApplication
+import be.howest.jarivalentine.virtualcloset.data.ItemRepository
+import be.howest.jarivalentine.virtualcloset.data.OutfitRepository
+import kotlinx.coroutines.flow.*
 
-class VirtualClosetViewModel {
+class VirtualClosetViewModel(itemRepository: ItemRepository, outfitRepository: OutfitRepository) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(VirtualClosetUiState())
-    val uiState: StateFlow<VirtualClosetUiState> = _uiState.asStateFlow()
+    val virtualClosetUiState: StateFlow<VirtualClosetUiState> = combine(
+        itemRepository.getAllItemsStream(type = ""),
+        outfitRepository.getAllOutfitsStream(query = "")
+    ) { items, outfits ->
+        VirtualClosetUiState(itemList = items, outfitList = outfits)
+    }.stateIn(
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
+        initialValue = VirtualClosetUiState()
+    )
 
-    fun setName(name: String) {
-        _uiState.update {
-            it.copy(name = name)
+    companion object {
+        private const val TIMEOUT_MILLIS = 5_000L
+
+        val Factory: ViewModelProvider.Factory = viewModelFactory {
+            initializer {
+                val application = (this[APPLICATION_KEY] as VirtualClosetApplication)
+                val itemRepository = application.container.itemRepository
+                val outfitRepository = application.container.outfitRepository
+                VirtualClosetViewModel(itemRepository, outfitRepository)
+            }
         }
     }
 }
