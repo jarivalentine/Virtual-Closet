@@ -2,10 +2,12 @@ package be.howest.jarivalentine.virtualcloset
 
 import androidx.annotation.StringRes
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountBox
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.rounded.Add
@@ -13,6 +15,7 @@ import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -27,6 +30,7 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.howest.jarivalentine.virtualcloset.ui.*
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
+import kotlinx.coroutines.launch
 
 enum class VirtualClosetScreen(@StringRes val title: Int) {
     Item(title = R.string.item_title),
@@ -50,7 +54,7 @@ fun VirtualClosetApp(
 
     Scaffold(
         topBar = {
-            TopBar(title = currentScreen.title)
+            TopBar(title = currentScreen.title, viewModel = viewModel)
         },
         bottomBar = {
             BottomNav(navController)
@@ -89,15 +93,40 @@ fun VirtualClosetApp(
 }
 
 @Composable
-fun TopBar(modifier: Modifier = Modifier, @StringRes title: Int) {
+fun TopBar(
+    @StringRes title: Int,
+    viewModel: VirtualClosetViewModel,
+    modifier: Modifier = Modifier
+) {
     Row(
         modifier = modifier
             .fillMaxWidth()
             .height(60.dp)
             .background(MaterialTheme.colors.primary),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.End
+        horizontalArrangement = Arrangement.SpaceBetween
     ) {
+        Row(
+            modifier = Modifier
+                .padding(start = 20.dp)
+                .align(Alignment.CenterVertically)
+        ) {
+            if (viewModel.selecting.value) {
+                val coroutineScope = rememberCoroutineScope()
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 20.dp)
+                        .size(35.dp)
+                        .clickable {
+                            coroutineScope.launch {
+                                viewModel.deleteSelected()
+                            }
+                        },
+                    imageVector = Icons.Default.Delete,
+                    contentDescription = stringResource(R.string.delete_items),
+                )
+            }
+        }
         TopBarTitle(title)
     }
 }

@@ -8,5 +8,5 @@ class OfflineItemRepository(private val itemDao: ItemDao) : ItemRepository {
 
         override suspend fun insertItem(item: Item) = itemDao.insert(item)
 
-        override suspend fun deleteItem(item: Item) = itemDao.delete(item)
+        override suspend fun deleteItem(id: Int) = itemDao.delete(id)
 }

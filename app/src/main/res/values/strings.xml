@@ -20,4 +20,5 @@
     <string name="create_outfit_title">create outfit</string>
     <string name="outfit_title">outfits</string>
     <string name="profile_title">profile</string>
+    <string name="delete_items">Delete items</string>
 </resources>

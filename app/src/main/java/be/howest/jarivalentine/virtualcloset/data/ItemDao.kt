@@ -9,8 +9,8 @@ interface ItemDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(item: Item)
 
-    @Delete
-    suspend fun delete(item: Item)
+    @Query("DELETE FROM item WHERE id = :id")
+    suspend fun delete(id: Int)
 
     @Query("SELECT * FROM item WHERE id = :id")
     fun getItem(id: Int): Flow<Item>

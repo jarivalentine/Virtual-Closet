@@ -6,6 +6,7 @@ import be.howest.jarivalentine.virtualcloset.data.Outfit
 data class VirtualClosetUiState(
     val itemList: List<Item> = listOf(),
     val outfitList: List<Outfit> = listOf(),
+    val selected: List<Int> = listOf()
 )
 
 data class ItemUiState(

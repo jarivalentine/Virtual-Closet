@@ -1,5 +1,6 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -29,6 +30,29 @@ class VirtualClosetViewModel(
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
         initialValue = VirtualClosetUiState()
     )
+
+    private val _selectedItems = mutableStateOf<List<Int>>(emptyList())
+    val selectedItems: State<List<Int>> = _selectedItems
+
+    private val _selecting = mutableStateOf(false)
+    val selecting: State<Boolean> = _selecting
+
+    fun toggleSelect(id: Int) {
+        if (!selecting.value) _selecting.value = true
+        val updatedSelection = if (_selectedItems.value.contains(id)) {
+            _selectedItems.value - id
+        } else {
+            _selectedItems.value + id
+        }
+        if (updatedSelection.isEmpty()) _selecting.value = false
+        _selectedItems.value = updatedSelection
+    }
+
+    suspend fun deleteSelected() {
+        _selectedItems.value.forEach { itemRepository.deleteItem(it) }
+        _selectedItems.value = emptyList()
+        _selecting.value = false
+    }
 
     var itemUiState by mutableStateOf(ItemUiState())
         private set
