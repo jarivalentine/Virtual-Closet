@@ -33,7 +33,7 @@ import be.howest.jarivalentine.virtualcloset.data.Item
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 
-val tags = listOf("All", "Tops", "Bottoms", "Shoes", "Accessories")
+val tags = listOf("Tops", "Bottoms", "Shoes", "Accessories")
 
 @Composable
 fun ItemScreen(

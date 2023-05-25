@@ -78,7 +78,7 @@ fun VirtualClosetApp(
                 CreateScreen(
                     viewModel,
                     onCancelClick = { navController.popBackStack() },
-                    onCreateClick = { navController.navigate(VirtualClosetScreen.Outfit.name) }
+                    onCreateClick = { navController.navigateUp() }
                 )
             }
             composable(route = VirtualClosetScreen.Profile.name) {
@@ -96,22 +96,10 @@ fun TopBar(modifier: Modifier = Modifier, @StringRes title: Int) {
             .height(60.dp)
             .background(MaterialTheme.colors.primary),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.End
     ) {
-        TopBarMenu()
         TopBarTitle(title)
     }
-}
-
-@Composable
-fun TopBarMenu() {
-    Icon(
-        Icons.Rounded.Menu,
-        stringResource(R.string.menu),
-        modifier = Modifier
-            .padding(start = 10.dp)
-            .size(40.dp)
-    )
 }
 
 @Composable

@@ -1,7 +1,5 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
-import android.Manifest
-import android.content.pm.PackageManager
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -11,13 +9,9 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.core.app.ActivityCompat
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.content.ContextCompat
 import be.howest.jarivalentine.virtualcloset.R
-import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
+import kotlinx.coroutines.launch
 
 @Composable
 fun CreateScreen(
@@ -31,34 +25,54 @@ fun CreateScreen(
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        ItemNameTextField()
-        ItemTypeDropdown()
+        val coroutineScope = rememberCoroutineScope()
+        ItemNameTextField(itemUiState = viewModel.itemUiState, onValueChange = viewModel::updateItemUiState)
+        ItemTypeDropdown(itemUiState = viewModel.itemUiState, onValueChange = viewModel::updateItemUiState)
         ImageUploadButton()
-        ControlButtons(onCancelClick, onCreateClick)
+        ControlButtons(
+            onCreateClick = {
+                coroutineScope.launch {
+                    viewModel.saveItem()
+                    onCreateClick()
+                }
+            },
+            onCancelClick = {
+                onCancelClick()
+            },
+            isActive = viewModel.itemUiState.actionEnabled
+        )
     }
 }
 
 @Composable
-fun ItemNameTextField() {
-    var text by remember { mutableStateOf("") }
-    InputField(text) { text = it }
+fun ItemNameTextField(itemUiState: ItemUiState, onValueChange: (ItemUiState) -> Unit) {
+    OutlinedTextField(
+        value = itemUiState.name,
+        onValueChange = { onValueChange(itemUiState.copy(name = it)) },
+        modifier = Modifier
+            .fillMaxWidth(),
+        colors = TextFieldDefaults.outlinedTextFieldColors(
+            unfocusedBorderColor = MaterialTheme.colors.primary,
+            unfocusedLabelColor = MaterialTheme.colors.primary,
+            textColor = MaterialTheme.colors.onSurface
+        ),
+        label = { Text(text = stringResource(R.string.text_name)) },
+        singleLine = true
+    )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ItemTypeDropdown() {
+fun ItemTypeDropdown(itemUiState: ItemUiState, onValueChange: (ItemUiState) -> Unit) {
     var expanded by remember {
         mutableStateOf(false)
     }
-    var selectedItem by remember {
-        mutableStateOf(tags[0])
-    }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        DropdownTextField(selectedItem, expanded)
+        DropdownTextField(itemUiState.type, expanded)
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             tags.forEach { selected ->
                 DropdownMenuItem(onClick = {
-                    selectedItem = selected
+                    onValueChange(itemUiState.copy(type = selected))
                     expanded = false
                 }) {
                     Text(text = selected)
@@ -108,7 +122,11 @@ fun ImageUploadButton() {
 }
 
 @Composable
-fun ControlButtons(onCancelClick: () -> Unit, onCreateClick: () -> Unit) {
+fun ControlButtons(
+    onCancelClick: () -> Unit,
+    onCreateClick: () -> Unit,
+    isActive: Boolean
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -126,7 +144,8 @@ fun ControlButtons(onCancelClick: () -> Unit, onCreateClick: () -> Unit) {
         }
         Button(
             modifier = Modifier.weight(1f),
-            onClick = { onCreateClick() }
+            onClick = { onCreateClick() },
+            enabled = isActive
         ) {
             Text(stringResource(R.string.next))
         }
