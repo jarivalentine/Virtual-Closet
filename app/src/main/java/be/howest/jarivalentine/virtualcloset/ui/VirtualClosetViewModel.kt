@@ -20,6 +20,8 @@ class VirtualClosetViewModel(
     private val outfitRepository: OutfitRepository
 ) : ViewModel() {
 
+    // Item Screen
+
     val virtualClosetUiState: StateFlow<VirtualClosetUiState> = combine(
         itemRepository.getAllItemsStream(type = null),
         outfitRepository.getAllOutfitsStream(query = "")
@@ -53,6 +55,16 @@ class VirtualClosetViewModel(
         _selectedItems.value = emptyList()
         _selecting.value = false
     }
+
+    fun createOutfit() {
+        TODO("Not yet implemented")
+    }
+
+    fun toggleAvailable() {
+        TODO("Not yet implemented")
+    }
+
+    // Create screen
 
     var itemUiState by mutableStateOf(ItemUiState())
         private set

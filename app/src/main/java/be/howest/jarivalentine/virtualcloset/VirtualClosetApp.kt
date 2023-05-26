@@ -6,10 +6,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AccountBox
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.*
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material.icons.rounded.Menu
 import androidx.compose.runtime.Composable
@@ -19,6 +16,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -108,8 +106,8 @@ fun TopBar(
     ) {
         Row(
             modifier = Modifier
-                .padding(start = 20.dp)
-                .align(Alignment.CenterVertically)
+                .padding(start = 20.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
             if (viewModel.selecting.value) {
                 val coroutineScope = rememberCoroutineScope()
@@ -124,6 +122,32 @@ fun TopBar(
                         },
                     imageVector = Icons.Default.Delete,
                     contentDescription = stringResource(R.string.delete_items),
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 20.dp)
+                        .size(35.dp)
+                        .clickable {
+                            coroutineScope.launch {
+                                viewModel.createOutfit()
+                            }
+                        },
+                    imageVector = Icons.Default.Favorite,
+                    contentDescription = stringResource(R.string.create_outfit),
+                )
+                Icon(
+                    modifier = Modifier
+                        .padding(end = 20.dp)
+                        .size(35.dp)
+                        .clickable {
+                            coroutineScope.launch {
+                                viewModel.toggleAvailable()
+                            }
+                        },
+                    painter = painterResource(id = R.drawable.output_onlinepngtools),
+                    contentDescription = stringResource(
+                        R.string.toggle_available
+                    )
                 )
             }
         }
