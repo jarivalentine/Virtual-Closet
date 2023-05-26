@@ -60,8 +60,10 @@ class VirtualClosetViewModel(
         TODO("Not yet implemented")
     }
 
-    fun toggleAvailable() {
-        TODO("Not yet implemented")
+    suspend fun toggleAvailable() {
+        _selectedItems.value.forEach { itemRepository.toggleAvailable(it) }
+        _selectedItems.value = emptyList()
+        _selecting.value = false
     }
 
     // Create screen

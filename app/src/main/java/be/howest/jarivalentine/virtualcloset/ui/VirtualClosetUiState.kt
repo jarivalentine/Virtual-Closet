@@ -12,7 +12,7 @@ data class ItemUiState(
     val id: Int = 0,
     val name: String = "",
     val type: String = "",
-    val available: Boolean = false,
+    val available: Boolean = true,
     val actionEnabled: Boolean = false
 )
 

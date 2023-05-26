@@ -163,6 +163,14 @@ fun ClosetItem(
                 }
             }
         }
+        if (!item.available) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .padding(10.dp)
+                    .background(Color.Gray.copy(alpha = 0.5f), shape = MaterialTheme.shapes.medium),
+            )
+        }
     }
 }
 
