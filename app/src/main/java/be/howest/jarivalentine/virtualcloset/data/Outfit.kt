@@ -10,3 +10,9 @@ data class Outfit(
     val name: String,
     val label: String
 )
+
+@Entity(tableName = "outfit_item", primaryKeys = ["outfitId", "itemId"])
+data class OutfitItem(
+    val outfitId: Int,
+    val itemId: Int
+)

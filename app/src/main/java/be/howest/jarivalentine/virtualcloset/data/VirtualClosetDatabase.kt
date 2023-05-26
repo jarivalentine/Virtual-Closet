@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 
-@Database(entities = [Item::class, Outfit::class], version = 1, exportSchema = false)
+@Database(entities = [Item::class, Outfit::class, OutfitItem::class], version = 2, exportSchema = false)
 abstract class VirtualClosetDatabase : RoomDatabase() {
 
     abstract fun itemDao(): ItemDao

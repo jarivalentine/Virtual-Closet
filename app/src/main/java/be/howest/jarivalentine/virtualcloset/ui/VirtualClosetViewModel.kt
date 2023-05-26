@@ -14,6 +14,7 @@ import be.howest.jarivalentine.virtualcloset.VirtualClosetApplication
 import be.howest.jarivalentine.virtualcloset.data.ItemRepository
 import be.howest.jarivalentine.virtualcloset.data.OutfitRepository
 import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.launch
 
 class VirtualClosetViewModel(
     private val itemRepository: ItemRepository,
@@ -56,17 +57,31 @@ class VirtualClosetViewModel(
         _selecting.value = false
     }
 
-    fun createOutfit() {
-        TODO("Not yet implemented")
-    }
-
     suspend fun toggleAvailable() {
         _selectedItems.value.forEach { itemRepository.toggleAvailable(it) }
         _selectedItems.value = emptyList()
         _selecting.value = false
     }
 
-    // Create screen
+    // Create oufit
+
+    var outfitUiState by mutableStateOf(OutfitUiState())
+        private set
+
+    fun updateOutfitUiState(outfit: OutfitUiState) {
+        outfitUiState = outfit.copy(actionEnabled = outfit.isValid())
+    }
+
+    suspend fun saveOutfit() {
+        val newOutfit = outfitUiState.toOutfit()
+        val selectedItems = _selectedItems.value
+        outfitRepository.insertOutfitWithItems(newOutfit, selectedItems)
+        _selectedItems.value = emptyList()
+        _selecting.value = false
+        outfitUiState = OutfitUiState()
+    }
+
+    // Create item
 
     var itemUiState by mutableStateOf(ItemUiState())
         private set

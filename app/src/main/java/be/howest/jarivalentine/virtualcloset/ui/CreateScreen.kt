@@ -15,9 +15,13 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun CreateScreen(
-    viewModel: VirtualClosetViewModel,
     onCancelClick: () -> Unit,
     onCreateClick: () -> Unit,
+    onNameValueChange: (String) -> Unit,
+    onTypeValueChange: (String) -> Unit,
+    name: String,
+    type: String,
+    isActive: Boolean,
 ) {
     Column(
         modifier = Modifier
@@ -25,30 +29,26 @@ fun CreateScreen(
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        val coroutineScope = rememberCoroutineScope()
-        ItemNameTextField(itemUiState = viewModel.itemUiState, onValueChange = viewModel::updateItemUiState)
-        ItemTypeDropdown(itemUiState = viewModel.itemUiState, onValueChange = viewModel::updateItemUiState)
+        NameTextField(name = name, onValueChange = onNameValueChange)
+        TypeDropdown(type = type, onValueChange = onTypeValueChange)
         ImageUploadButton()
         ControlButtons(
             onCreateClick = {
-                coroutineScope.launch {
-                    viewModel.saveItem()
-                    onCreateClick()
-                }
+                onCreateClick()
             },
             onCancelClick = {
                 onCancelClick()
             },
-            isActive = viewModel.itemUiState.actionEnabled
+            isActive = isActive
         )
     }
 }
 
 @Composable
-fun ItemNameTextField(itemUiState: ItemUiState, onValueChange: (ItemUiState) -> Unit) {
+fun NameTextField(name: String, onValueChange: (String) -> Unit) {
     OutlinedTextField(
-        value = itemUiState.name,
-        onValueChange = { onValueChange(itemUiState.copy(name = it)) },
+        value = name,
+        onValueChange = { onValueChange(it) },
         modifier = Modifier
             .fillMaxWidth(),
         colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -63,16 +63,16 @@ fun ItemNameTextField(itemUiState: ItemUiState, onValueChange: (ItemUiState) -> 
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun ItemTypeDropdown(itemUiState: ItemUiState, onValueChange: (ItemUiState) -> Unit) {
+fun TypeDropdown(type: String, onValueChange: (String) -> Unit) {
     var expanded by remember {
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        DropdownTextField(itemUiState.type, expanded)
+        DropdownTextField(type, expanded)
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             tags.forEach { selected ->
                 DropdownMenuItem(onClick = {
-                    onValueChange(itemUiState.copy(type = selected))
+                    onValueChange(selected)
                     expanded = false
                 }) {
                     Text(text = selected)

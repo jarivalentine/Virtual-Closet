@@ -7,4 +7,10 @@ class OfflineOutfitRepository(private val outfitDao: OutfitDao) : OutfitReposito
     override suspend fun insertOutfit(outfit: Outfit) = outfitDao.insert(outfit)
 
     override suspend fun deleteItem(outfit: Outfit) = outfitDao.delete(outfit)
+
+    override suspend fun insertOutfitWithItems(outfit: Outfit, items: List<Int>) {
+        val outfitId = outfitDao.insert(outfit)
+        val outfitItems = items.map { itemId -> OutfitItem(outfitId.toInt(), itemId) }
+        outfitDao.insertOutfitItems(outfitItems)
+    }
 }

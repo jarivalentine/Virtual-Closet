@@ -52,7 +52,7 @@ fun VirtualClosetApp(
 
     Scaffold(
         topBar = {
-            TopBar(title = currentScreen.title, viewModel = viewModel)
+            TopBar(title = currentScreen.title, viewModel = viewModel, navController = navController)
         },
         bottomBar = {
             BottomNav(navController)
@@ -77,10 +77,47 @@ fun VirtualClosetApp(
                 OutfitScreen(viewModel)
             }
             composable(route = VirtualClosetScreen.CreateItem.name) {
+                val coroutineScope = rememberCoroutineScope()
+                val itemUiState = viewModel.itemUiState
                 CreateScreen(
-                    viewModel,
                     onCancelClick = { navController.popBackStack() },
-                    onCreateClick = { navController.navigateUp() }
+                    onCreateClick = {
+                        coroutineScope.launch {
+                            viewModel.saveItem()
+                            navController.navigateUp()
+                        }
+                    },
+                    onNameValueChange = {
+                        viewModel.updateItemUiState(itemUiState.copy(name = it))
+                    },
+                    onTypeValueChange = {
+                        viewModel.updateItemUiState(itemUiState.copy(type = it))
+                    },
+                    name = itemUiState.name,
+                    type = itemUiState.type,
+                    isActive = itemUiState.actionEnabled,
+                )
+            }
+            composable(route = VirtualClosetScreen.CreateOutfit.name) {
+                val coroutineScope = rememberCoroutineScope()
+                val outfitUiState = viewModel.outfitUiState
+                CreateScreen(
+                    onCancelClick = { navController.popBackStack() },
+                    onCreateClick = {
+                        coroutineScope.launch {
+                            viewModel.saveOutfit()
+                            navController.navigate(VirtualClosetScreen.Outfit.name)
+                        }
+                    },
+                    onNameValueChange = {
+                        viewModel.updateOutfitUiState(outfitUiState.copy(name = it))
+                    },
+                    onTypeValueChange = {
+                        viewModel.updateOutfitUiState(outfitUiState.copy(label = it))
+                    },
+                    name = outfitUiState.name,
+                    type = outfitUiState.label,
+                    isActive = outfitUiState.actionEnabled,
                 )
             }
             composable(route = VirtualClosetScreen.Profile.name) {
@@ -94,6 +131,7 @@ fun VirtualClosetApp(
 fun TopBar(
     @StringRes title: Int,
     viewModel: VirtualClosetViewModel,
+    navController: NavHostController,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -128,9 +166,7 @@ fun TopBar(
                         .padding(end = 20.dp)
                         .size(35.dp)
                         .clickable {
-                            coroutineScope.launch {
-                                viewModel.createOutfit()
-                            }
+                            navController.navigate(VirtualClosetScreen.CreateOutfit.name)
                         },
                     imageVector = Icons.Default.Favorite,
                     contentDescription = stringResource(R.string.create_outfit),

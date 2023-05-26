@@ -26,3 +26,20 @@ fun ItemUiState.toItem(): Item = Item(
     type = type,
     available = available
 )
+
+data class OutfitUiState(
+    val id: Int = 0,
+    val name: String = "",
+    val label: String = "",
+    val actionEnabled: Boolean = false
+)
+
+fun OutfitUiState.isValid() : Boolean {
+    return name.isNotBlank() && label.isNotBlank()
+}
+
+fun OutfitUiState.toOutfit(): Outfit = Outfit(
+    id = id,
+    name = name,
+    label = label
+)
