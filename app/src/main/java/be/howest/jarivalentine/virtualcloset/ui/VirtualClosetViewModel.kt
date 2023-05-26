@@ -21,11 +21,11 @@ class VirtualClosetViewModel(
     private val outfitRepository: OutfitRepository
 ) : ViewModel() {
 
-    // Item Screen
+    // Items and outfits
 
     val virtualClosetUiState: StateFlow<VirtualClosetUiState> = combine(
         itemRepository.getAllItemsStream(type = null),
-        outfitRepository.getAllOutfitsStream(query = "")
+        outfitRepository.getAllOutfitsStream(query = null)
     ) { items, outfits ->
         VirtualClosetUiState(itemList = items, outfitList = outfits)
     }.stateIn(
