@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.CoroutineWorker
 import androidx.work.WorkerParameters
+import be.howest.jarivalentine.virtualcloset.VirtualClosetApplication
 
 class LaundryReminderWorker(
     context: Context,
@@ -11,10 +12,14 @@ class LaundryReminderWorker(
 ) : CoroutineWorker(context, params) {
 
     override suspend fun doWork(): Result {
+        val application = applicationContext as VirtualClosetApplication
+        val itemRepository = application.container.itemRepository
 
-        makeLaundryReminderNotification(
-            applicationContext
-        )
+        val hasUnavailableItems = itemRepository.hasUnavailableItems()
+
+        if (hasUnavailableItems) {
+            makeLaundryReminderNotification(applicationContext)
+        }
 
         return Result.success()
     }

@@ -11,4 +11,6 @@ class OfflineItemRepository(private val itemDao: ItemDao) : ItemRepository {
         override suspend fun deleteItem(id: Int) = itemDao.delete(id)
 
         override suspend fun toggleAvailable(id: Int) = itemDao.toggleAvailable(id)
+
+        override suspend fun hasUnavailableItems() = itemDao.hasUnavailableItems()
 }

@@ -20,4 +20,7 @@ interface ItemDao {
 
     @Query("UPDATE item SET available = NOT available WHERE id = :id")
     suspend fun toggleAvailable(id: Int)
+
+    @Query("SELECT COUNT(*) FROM item WHERE available = 0")
+    suspend fun hasUnavailableItems(): Boolean
 }
