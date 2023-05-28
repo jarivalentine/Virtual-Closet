@@ -1,7 +1,10 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import android.content.Intent
+import android.provider.CalendarContract
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
@@ -10,8 +13,11 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
+import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,6 +33,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Outfit
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
@@ -94,6 +101,7 @@ fun Outfits(
 
 @Composable
 fun Outfit(outfit: Outfit) {
+    val context = LocalContext.current;
     Card {
         val configuration = LocalConfiguration.current
         val screenHeight = configuration.screenHeightDp.dp
@@ -127,14 +135,54 @@ fun Outfit(outfit: Outfit) {
                     )
                     Labels()
                 }
-                Icon(
-                    imageVector = Icons.Filled.MoreVert,
-                    contentDescription = "More",
-                    modifier = Modifier
-                        .size(50.dp)
-                        .padding(10.dp),
-                    tint = MaterialTheme.colors.onSurface
-                )
+                Row {
+                    Icon(
+                        imageVector = Icons.Filled.Share,
+                        contentDescription = "More",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(10.dp)
+                            .clickable {
+                                val shareText = "I am wearing ${outfit.name} today!"
+                                val intent = Intent(Intent.ACTION_SEND).apply {
+                                    type = "text/plain"
+                                    putExtra(Intent.EXTRA_TEXT, shareText)
+                                }
+                                val shareIntent = Intent.createChooser(intent, null)
+
+                                context.startActivity(shareIntent)
+                            },
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                    Icon(
+                        imageVector = Icons.Filled.DateRange,
+                        contentDescription = "More",
+                        modifier = Modifier
+                            .size(50.dp)
+                            .padding(10.dp)
+                            .clickable {
+                                val intent = Intent(Intent.ACTION_INSERT)
+                                    .setData(CalendarContract.Events.CONTENT_URI)
+                                    .putExtra(CalendarContract.Events.TITLE, "Event Title")
+                                    .putExtra(CalendarContract.Events.EVENT_LOCATION, "Event Location")
+                                    .putExtra(CalendarContract.Events.DESCRIPTION, "Event Description")
+                                    .putExtra(
+                                        CalendarContract.EXTRA_EVENT_BEGIN_TIME,
+                                        System.currentTimeMillis() + 1000 * 60 * 60
+                                    )
+                                    .putExtra(
+                                        CalendarContract.EXTRA_EVENT_END_TIME,
+                                        System.currentTimeMillis() + 1000 * 60 * 120
+                                    )
+                                    .putExtra(CalendarContract.Events.ALL_DAY, false)
+
+                                val calendarIntent = Intent.createChooser(intent, null)
+
+                                context.startActivity(calendarIntent)
+                            },
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                }
             }
         }
     }
