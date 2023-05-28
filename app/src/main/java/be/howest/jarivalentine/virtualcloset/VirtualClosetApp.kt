@@ -148,47 +148,54 @@ fun TopBar(
             verticalAlignment = Alignment.CenterVertically
         ) {
             if (viewModel.selecting.value) {
-                val coroutineScope = rememberCoroutineScope()
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 20.dp)
-                        .size(35.dp)
-                        .clickable {
-                            coroutineScope.launch {
-                                viewModel.deleteSelected()
-                            }
-                        },
-                    imageVector = Icons.Default.Delete,
-                    contentDescription = stringResource(R.string.delete_items),
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 20.dp)
-                        .size(35.dp)
-                        .clickable {
-                            navController.navigate(VirtualClosetScreen.CreateOutfit.name)
-                        },
-                    imageVector = Icons.Default.Favorite,
-                    contentDescription = stringResource(R.string.create_outfit),
-                )
-                Icon(
-                    modifier = Modifier
-                        .padding(end = 20.dp)
-                        .size(35.dp)
-                        .clickable {
-                            coroutineScope.launch {
-                                viewModel.toggleAvailable()
-                            }
-                        },
-                    painter = painterResource(id = R.drawable.output_onlinepngtools),
-                    contentDescription = stringResource(
-                        R.string.toggle_available
-                    )
-                )
+                SelectingRow(viewModel, onCreateOutfitClick = {
+                    navController.navigate(VirtualClosetScreen.CreateOutfit.name)
+                })
             }
         }
         TopBarTitle(title)
     }
+}
+
+@Composable
+fun SelectingRow(viewModel: VirtualClosetViewModel, onCreateOutfitClick: () -> Unit) {
+    val coroutineScope = rememberCoroutineScope()
+    Icon(
+        modifier = Modifier
+            .padding(end = 20.dp)
+            .size(35.dp)
+            .clickable {
+                coroutineScope.launch {
+                    viewModel.deleteSelected()
+                }
+            },
+        imageVector = Icons.Default.Delete,
+        contentDescription = stringResource(R.string.delete_items),
+    )
+    Icon(
+        modifier = Modifier
+            .padding(end = 20.dp)
+            .size(35.dp)
+            .clickable {
+                onCreateOutfitClick()
+            },
+        imageVector = Icons.Default.Favorite,
+        contentDescription = stringResource(R.string.create_outfit),
+    )
+    Icon(
+        modifier = Modifier
+            .padding(end = 20.dp)
+            .size(35.dp)
+            .clickable {
+                coroutineScope.launch {
+                    viewModel.toggleAvailable()
+                }
+            },
+        painter = painterResource(id = R.drawable.output_onlinepngtools),
+        contentDescription = stringResource(
+            R.string.toggle_available
+        )
+    )
 }
 
 @Composable

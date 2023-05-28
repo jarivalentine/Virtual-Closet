@@ -1,27 +1,19 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
 import android.app.DatePickerDialog
-import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
 import android.provider.CalendarContract
-import android.provider.MediaStore
-import android.widget.DatePicker
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsDraggedAsState
-import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
-import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.Place
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
@@ -29,22 +21,17 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.app.ActivityCompat.startActivityForResult
-import androidx.core.content.ContextCompat.startActivity
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Outfit
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
-import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -109,7 +96,6 @@ fun Outfits(
 
 @Composable
 fun Outfit(outfit: Outfit) {
-    val context = LocalContext.current;
     Card {
         val configuration = LocalConfiguration.current
         val screenHeight = configuration.screenHeightDp.dp
@@ -143,40 +129,44 @@ fun Outfit(outfit: Outfit) {
                     )
                     Labels()
                 }
-                Row {
-                    Icon(
-                        imageVector = Icons.Filled.Share,
-                        contentDescription = "More",
-                        modifier = Modifier
-                            .size(50.dp)
-                            .padding(10.dp)
-                            .clickable {
-                                val shareText = "I am wearing ${outfit.name} today!"
-                                val intent = Intent(Intent.ACTION_SEND).apply {
-                                    type = "text/plain"
-                                    putExtra(Intent.EXTRA_TEXT, shareText)
-                                }
-                                val shareIntent = Intent.createChooser(intent, null)
-
-                                context.startActivity(shareIntent)
-                            },
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                    Icon(
-                        imageVector = Icons.Filled.DateRange,
-                        contentDescription = "More",
-                        modifier = Modifier
-                            .size(50.dp)
-                            .padding(10.dp)
-                            .clickable {
-                               showDatePickerDialog(context, outfit.name)
-                            },
-                        tint = MaterialTheme.colors.onSurface
-                    )
-                }
+                IntentOptions(outfit.name)
             }
         }
     }
+}
+
+@Composable
+fun IntentOptions(name: String) {
+    val context = LocalContext.current;
+    Icon(
+        imageVector = Icons.Filled.Share,
+        contentDescription = "More",
+        modifier = Modifier
+            .size(50.dp)
+            .padding(10.dp)
+            .clickable {
+                val shareText = "I am wearing $name today!"
+                val intent = Intent(Intent.ACTION_SEND).apply {
+                    type = "text/plain"
+                    putExtra(Intent.EXTRA_TEXT, shareText)
+                }
+                val shareIntent = Intent.createChooser(intent, null)
+
+                context.startActivity(shareIntent)
+            },
+        tint = MaterialTheme.colors.onSurface
+    )
+    Icon(
+        imageVector = Icons.Filled.DateRange,
+        contentDescription = "More",
+        modifier = Modifier
+            .size(50.dp)
+            .padding(10.dp)
+            .clickable {
+                showDatePickerDialog(context, name)
+            },
+        tint = MaterialTheme.colors.onSurface
+    )
 }
 
 private fun showDatePickerDialog(context: Context, outfitName: String) {
