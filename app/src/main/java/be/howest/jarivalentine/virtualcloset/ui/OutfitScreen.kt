@@ -1,7 +1,13 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import android.app.DatePickerDialog
+import android.content.ActivityNotFoundException
+import android.content.Context
 import android.content.Intent
 import android.provider.CalendarContract
+import android.provider.MediaStore
+import android.widget.DatePicker
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,6 +39,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.app.ActivityCompat.startActivityForResult
 import androidx.core.content.ContextCompat.startActivity
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Outfit
@@ -41,6 +48,7 @@ import be.howest.jarivalentine.virtualcloset.ui.theme.VirtualClosetTheme
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
+import java.util.Calendar
 
 val labels = listOf("summer", "winter", "spring", "autumn")
 
@@ -161,24 +169,7 @@ fun Outfit(outfit: Outfit) {
                             .size(50.dp)
                             .padding(10.dp)
                             .clickable {
-                                val intent = Intent(Intent.ACTION_INSERT)
-                                    .setData(CalendarContract.Events.CONTENT_URI)
-                                    .putExtra(CalendarContract.Events.TITLE, "Event Title")
-                                    .putExtra(CalendarContract.Events.EVENT_LOCATION, "Event Location")
-                                    .putExtra(CalendarContract.Events.DESCRIPTION, "Event Description")
-                                    .putExtra(
-                                        CalendarContract.EXTRA_EVENT_BEGIN_TIME,
-                                        System.currentTimeMillis() + 1000 * 60 * 60
-                                    )
-                                    .putExtra(
-                                        CalendarContract.EXTRA_EVENT_END_TIME,
-                                        System.currentTimeMillis() + 1000 * 60 * 120
-                                    )
-                                    .putExtra(CalendarContract.Events.ALL_DAY, false)
-
-                                val calendarIntent = Intent.createChooser(intent, null)
-
-                                context.startActivity(calendarIntent)
+                               showDatePickerDialog(context, outfit.name)
                             },
                         tint = MaterialTheme.colors.onSurface
                     )
@@ -186,6 +177,38 @@ fun Outfit(outfit: Outfit) {
             }
         }
     }
+}
+
+private fun showDatePickerDialog(context: Context, outfitName: String) {
+    val calendar = Calendar.getInstance()
+    val year = calendar.get(Calendar.YEAR)
+    val month = calendar.get(Calendar.MONTH)
+    val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+    val datePickerDialog = DatePickerDialog(
+        context,
+        { _, year, monthOfYear, dayOfMonth ->
+            val selectedDate = Calendar.getInstance()
+            selectedDate.set(year, monthOfYear, dayOfMonth)
+
+            val intent = Intent(Intent.ACTION_INSERT)
+                .setData(CalendarContract.Events.CONTENT_URI)
+                .putExtra(CalendarContract.Events.TITLE, "Wear $outfitName today")
+                .putExtra(CalendarContract.Events.EVENT_LOCATION, "Outfit planned")
+                .putExtra(CalendarContract.Events.DESCRIPTION, "This outfit is planned for today")
+                .putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, selectedDate.timeInMillis)
+                .putExtra(CalendarContract.EXTRA_EVENT_END_TIME, selectedDate.timeInMillis + 2 * 60 * 60 * 1000)
+                .putExtra(CalendarContract.Events.ALL_DAY, false)
+
+            val calendarIntent = Intent.createChooser(intent, null)
+            context.startActivity(calendarIntent)
+        },
+        year,
+        month,
+        day
+    )
+
+    datePickerDialog.show()
 }
 
 @Composable
