@@ -84,7 +84,7 @@ class VirtualClosetViewModel(
         _selecting.value = false
     }
 
-    // Create oufit
+    // Create outfit
 
     var outfitUiState by mutableStateOf(OutfitUiState())
         private set
@@ -102,6 +102,14 @@ class VirtualClosetViewModel(
         outfitUiState = OutfitUiState()
     }
 
+    suspend fun hasUnavailableItems(id: Int): Boolean {
+        return itemRepository.hasUnavailableItems(id)
+    }
+
+    suspend fun deleteOutfit(id: Int) {
+        outfitRepository.deleteOutfit(id)
+    }
+
     // Create item
 
     var itemUiState by mutableStateOf(ItemUiState())
@@ -109,7 +117,8 @@ class VirtualClosetViewModel(
 
 
     fun updateItemUiState(item: ItemUiState) {
-        itemUiState = item.copy(actionEnabled = item.isValid());
+        Log.d("VirtualClosetViewModel", item.toString())
+        itemUiState = item.copy(actionEnabled = item.isValid())
     }
 
     suspend fun saveItem() {

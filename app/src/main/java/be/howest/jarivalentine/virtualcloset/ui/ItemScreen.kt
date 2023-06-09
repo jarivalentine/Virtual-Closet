@@ -18,11 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Item
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 
 val tags = listOf("Tops", "Bottoms", "Shoes", "Accessories")
 
@@ -83,19 +87,23 @@ fun ClosetItems(
     selected: List<Int>,
     selecting: Boolean
 ) {
-    LazyVerticalGrid(
-        modifier = Modifier
-            .fillMaxSize(),
-        columns = GridCells.Fixed(2)
-    ) {
-        items(items) {
-            ClosetItem(
-                item = it,
-                onSelect = onSelect,
-                isSelected = selected.contains(it.id),
-                selecting = selecting
-            )
+    if (items.isNotEmpty()) {
+        LazyVerticalGrid(
+            modifier = Modifier
+                .fillMaxSize(),
+            columns = GridCells.Fixed(2)
+        ) {
+            items(items) {
+                ClosetItem(
+                    item = it,
+                    onSelect = onSelect,
+                    isSelected = selected.contains(it.id),
+                    selecting = selecting
+                )
+            }
         }
+    } else {
+        Text(text = "You have no items in your closet", modifier = Modifier.padding(10.dp))
     }
 }
 
@@ -126,6 +134,17 @@ fun ClosetItem(
                 ClosetItemText(item.name)
             }
         }
+        AsyncImage(
+            modifier = Modifier
+                .width(75.dp)
+                .padding(20.dp),
+            model = ImageRequest.Builder(context = LocalContext.current)
+                .data(item.brandImage)
+                .crossfade(true)
+                .build(),
+            contentDescription = stringResource(id = R.string.logo_description),
+            contentScale = ContentScale.Fit,
+        )
         if (selecting) {
             Box(
                 modifier = Modifier

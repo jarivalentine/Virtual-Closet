@@ -23,4 +23,7 @@ interface ItemDao {
 
     @Query("SELECT COUNT(*) FROM item WHERE available = 0")
     suspend fun hasUnavailableItems(): Boolean
+
+    @Query("SELECT COUNT(*) FROM item WHERE available = 0 AND id = :id")
+    suspend fun hasUnavailableItems(id: Int): Boolean
 }

@@ -19,6 +19,8 @@ data class ItemUiState(
     val id: Int = 0,
     val name: String = "",
     val type: String = "",
+    val brand: String = "",
+    val brandImage: String = "",
     val available: Boolean = true,
     val actionEnabled: Boolean = false
 )
@@ -31,6 +33,8 @@ fun ItemUiState.toItem(): Item = Item(
     id = id,
     name = name,
     type = type,
+    brand = brand,
+    brandImage = brandImage,
     available = available
 )
 

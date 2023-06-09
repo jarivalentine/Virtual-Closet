@@ -9,5 +9,7 @@ data class Item(
     val id: Int,
     val name: String,
     val type: String,
+    val brand: String,
+    val brandImage: String,
     val available: Boolean,
 )

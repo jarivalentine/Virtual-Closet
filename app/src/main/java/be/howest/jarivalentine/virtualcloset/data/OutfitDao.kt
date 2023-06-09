@@ -11,8 +11,8 @@ interface OutfitDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insert(outfit: Outfit): Long
 
-    @Delete
-    suspend fun delete(outfit: Outfit)
+    @Query("DELETE FROM outfit WHERE id = :id")
+    suspend fun delete(id: Int)
 
     @Query("SELECT * FROM outfit WHERE name LIKE :query OR :query IS NULL")
     fun getAllOutfits(query: String?): Flow<List<Outfit>>

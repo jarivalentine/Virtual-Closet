@@ -11,8 +11,6 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarivalentine.virtualcloset.R
-import be.howest.jarivalentine.virtualcloset.data.Brand
-import kotlinx.coroutines.launch
 
 @Composable
 fun CreateScreen(
@@ -22,8 +20,10 @@ fun CreateScreen(
     onTypeValueChange: (String) -> Unit,
     name: String,
     type: String,
+    brand: String?,
     isActive: Boolean,
-    viewModel: VirtualClosetViewModel?
+    viewModel: VirtualClosetViewModel?,
+    onBrandValueChange: ((String, String?) -> Unit)?,
 ) {
     val case = if (viewModel != null) "item" else "outfit"
     Column(
@@ -33,11 +33,11 @@ fun CreateScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         NameTextField(name = name, onValueChange = onNameValueChange, case = case)
-        if (viewModel != null) {
+        if (viewModel != null && onBrandValueChange != null && brand != null) {
             val brandUiState = viewModel.brandUiState
             BrandDropdown(
-                type = type,
-                onValueChange = onTypeValueChange,
+                brandName = brand,
+                onValueChange = onBrandValueChange,
                 brandUiState = brandUiState,
                 case = case
             )
@@ -99,8 +99,8 @@ fun TypeDropdown(type: String, onValueChange: (String) -> Unit, case: String, ty
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun BrandDropdown(
-    type: String,
-    onValueChange: (String) -> Unit,
+    brandName: String,
+    onValueChange: (String, String?) -> Unit,
     brandUiState: BrandUiState,
     case: String
 ) {
@@ -108,7 +108,7 @@ fun BrandDropdown(
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        DropdownTextField(type, expanded, label = "$case brand")
+        DropdownTextField(brandName, expanded, label = "$case brand")
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             when (brandUiState) {
                 is BrandUiState.Loading -> {
@@ -120,7 +120,7 @@ fun BrandDropdown(
                 is BrandUiState.Success -> {
                     brandUiState.brands.forEach { brand ->
                         DropdownMenuItem(onClick = {
-                            onValueChange(brand.brandName)
+                            onValueChange(brand.brandName, brand.brandLogoUrl ?: "")
                             expanded = false
                         }) {
                             Text(text = brand.brandName)

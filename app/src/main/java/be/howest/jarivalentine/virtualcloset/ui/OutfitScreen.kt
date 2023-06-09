@@ -14,6 +14,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Share
 import androidx.compose.runtime.*
@@ -35,9 +36,10 @@ import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
+import kotlinx.coroutines.launch
 import java.util.Calendar
 
-val labels = listOf("summer", "winter", "spring", "autumn")
+val labels = listOf("Summer", "Winter", "Spring", "Autumn")
 
 @Composable
 fun OutfitScreen(
@@ -53,7 +55,8 @@ fun OutfitScreen(
     ) {
         SearchField()
         Outfits(
-            outfits = uiState.outfitList
+            outfits = uiState.outfitList,
+            viewModel = viewModel
         )
     }
 }
@@ -84,18 +87,35 @@ fun SearchField() {
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Outfits(
-    outfits: List<Outfit>
+    outfits: List<Outfit>,
+    viewModel: VirtualClosetViewModel
 ) {
+    val outfitAvailability by remember { mutableStateOf(mutableMapOf<Int, String>()) }
+
+    LaunchedEffect(outfits) {
+        outfits.forEach { outfit ->
+            val hasUnavailable = viewModel.hasUnavailableItems(outfit.id)
+            outfitAvailability[outfit.id] = if (hasUnavailable) "Unavailable" else "Available"
+        }
+    }
+
     SlidingCarousel(
         itemsCount = outfits.size,
         itemContent = { index ->
-            Outfit(outfits[index])
+            val outfit = outfits[index]
+            val availability = outfitAvailability[outfit.id] ?: "Loading..."
+            val coroutineScope = rememberCoroutineScope()
+            Outfit(outfit, availability, deleteOutfit = {
+                coroutineScope.launch {
+                    viewModel.deleteOutfit(outfit.id)
+                }
+            })
         }
     )
 }
 
 @Composable
-fun Outfit(outfit: Outfit) {
+fun Outfit(outfit: Outfit, availability: String, deleteOutfit: () -> Unit) {
     Card {
         val configuration = LocalConfiguration.current
         val screenHeight = configuration.screenHeightDp.dp
@@ -127,16 +147,16 @@ fun Outfit(outfit: Outfit) {
                         fontSize = 20.sp,
                         color = MaterialTheme.colors.onSurface
                     )
-                    Labels()
+                    Labels(outfit.label, availability)
                 }
-                IntentOptions(outfit.name)
+                IntentOptions(outfit.name, deleteOutfit = deleteOutfit)
             }
         }
     }
 }
 
 @Composable
-fun IntentOptions(name: String) {
+fun IntentOptions(name: String, deleteOutfit: () -> Unit) {
     val context = LocalContext.current;
     Row {
         Icon(
@@ -165,6 +185,17 @@ fun IntentOptions(name: String) {
                 .padding(10.dp)
                 .clickable {
                     showDatePickerDialog(context, name)
+                },
+            tint = MaterialTheme.colors.onSurface
+        )
+        Icon(
+            imageVector = Icons.Filled.Delete,
+            contentDescription = "More",
+            modifier = Modifier
+                .size(50.dp)
+                .padding(10.dp)
+                .clickable {
+                    deleteOutfit()
                 },
             tint = MaterialTheme.colors.onSurface
         )
@@ -204,10 +235,10 @@ private fun showDatePickerDialog(context: Context, outfitName: String) {
 }
 
 @Composable
-fun Labels() {
+fun Labels(label: String, availability: String) {
     Row() {
-        Label(labels[2])
-        Label("Available")
+        Label(label)
+        Label(availability)
     }
 }
 
@@ -248,19 +279,23 @@ fun SlidingCarousel(
         HorizontalPager(count = itemsCount, state = pagerState) { page ->
             itemContent(page)
         }
-        Surface(
-            modifier = Modifier
-                .padding(vertical = 10.dp)
-                .align(Alignment.CenterHorizontally),
-            shape = CircleShape,
-            color = MaterialTheme.colors.primaryVariant
-        ) {
-            DotsIndicator(
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
-                totalDots = itemsCount,
-                selectedIndex = if (isDragged) pagerState.currentPage else pagerState.targetPage,
-                dotSize = 8.dp
-            )
+        if (itemsCount == 0) {
+            Text(text = "Create outfits by clicking on items and favourite them!")
+        } else if (itemsCount > 1) {
+            Surface(
+                modifier = Modifier
+                    .padding(vertical = 10.dp)
+                    .align(Alignment.CenterHorizontally),
+                shape = CircleShape,
+                color = MaterialTheme.colors.primaryVariant
+            ) {
+                DotsIndicator(
+                    modifier = Modifier.padding(horizontal = 8.dp, vertical = 6.dp),
+                    totalDots = itemsCount,
+                    selectedIndex = if (isDragged) pagerState.currentPage else pagerState.targetPage,
+                    dotSize = 8.dp
+                )
+            }
         }
     }
 }

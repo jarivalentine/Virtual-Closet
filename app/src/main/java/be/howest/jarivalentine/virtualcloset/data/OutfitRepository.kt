@@ -7,7 +7,7 @@ interface OutfitRepository {
 
     suspend fun insertOutfit(outfit: Outfit): Long
 
-    suspend fun deleteItem(outfit: Outfit)
+    suspend fun deleteOutfit(id: Int)
 
     suspend fun insertOutfitWithItems(outfit: Outfit, items: List<Int>)
 }

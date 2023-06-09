@@ -14,4 +14,5 @@ interface ItemRepository {
     suspend fun toggleAvailable(id: Int)
 
     suspend fun hasUnavailableItems(): Boolean
+    suspend fun hasUnavailableItems(id: Int): Boolean
 }
