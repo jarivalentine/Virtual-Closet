@@ -14,6 +14,7 @@ interface AppContainer {
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
+    val json = Json { ignoreUnknownKeys = true }
 
     override val itemRepository: ItemRepository by lazy {
         OfflineItemRepository(VirtualClosetDatabase.getDatabase(context).itemDao())
@@ -24,10 +25,10 @@ class AppDataContainer(private val context: Context) : AppContainer {
     }
 
     private val BASE_URL =
-        "https://virtual-closet.hasura.app/api/rest"
+        "https://virtual-closet.hasura.app/api/rest/"
 
     private val retrofit = Retrofit.Builder()
-        .addConverterFactory(Json.asConverterFactory("application/json".toMediaType()))
+        .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)
         .build()
 

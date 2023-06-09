@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarivalentine.virtualcloset.R
+import be.howest.jarivalentine.virtualcloset.data.Brand
 import kotlinx.coroutines.launch
 
 @Composable
@@ -22,6 +23,7 @@ fun CreateScreen(
     name: String,
     type: String,
     isActive: Boolean,
+    viewModel: VirtualClosetViewModel?
 ) {
     Column(
         modifier = Modifier
@@ -30,7 +32,12 @@ fun CreateScreen(
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
         NameTextField(name = name, onValueChange = onNameValueChange)
-        TypeDropdown(type = type, onValueChange = onTypeValueChange)
+        if (viewModel != null) {
+            val brandUiState = viewModel.brandUiState
+            BrandDropdown(type = type, onValueChange = onTypeValueChange, brandUiState = brandUiState)
+        } else {
+            TypeDropdown(type = type, onValueChange = onTypeValueChange)
+        }
         ImageUploadButton()
         ControlButtons(
             onCreateClick = {
@@ -76,6 +83,41 @@ fun TypeDropdown(type: String, onValueChange: (String) -> Unit) {
                     expanded = false
                 }) {
                     Text(text = selected)
+                }
+            }
+        }
+    }
+}
+
+@OptIn(ExperimentalMaterialApi::class)
+@Composable
+fun BrandDropdown(type: String, onValueChange: (String) -> Unit, brandUiState: BrandUiState) {
+    var expanded by remember {
+        mutableStateOf(false)
+    }
+    ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
+        DropdownTextField(type, expanded)
+        ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
+            when (brandUiState) {
+                is BrandUiState.Loading -> {
+                    DropdownMenuItem(onClick = {}) {
+                        Text(text = "Loading...")
+                    }
+                }
+                is BrandUiState.Success -> {
+                    brandUiState.brands.forEach { brand ->
+                        DropdownMenuItem(onClick = {
+                            onValueChange(brand.brandName)
+                            expanded = false
+                        }) {
+                            Text(text = brand.brandName)
+                        }
+                    }
+                }
+                is BrandUiState.Error -> {
+                    DropdownMenuItem(onClick = {}) {
+                        Text(text = "Error")
+                    }
                 }
             }
         }

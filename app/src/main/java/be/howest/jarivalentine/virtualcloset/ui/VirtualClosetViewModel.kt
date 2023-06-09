@@ -1,5 +1,6 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -11,21 +12,25 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import be.howest.jarivalentine.virtualcloset.VirtualClosetApplication
+import be.howest.jarivalentine.virtualcloset.data.BrandRepository
 import be.howest.jarivalentine.virtualcloset.data.ItemRepository
 import be.howest.jarivalentine.virtualcloset.data.OutfitRepository
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
+import java.io.IOException
 
 class VirtualClosetViewModel(
     private val itemRepository: ItemRepository,
-    private val outfitRepository: OutfitRepository
+    private val outfitRepository: OutfitRepository,
+    private val brandRepository: BrandRepository
 ) : ViewModel() {
 
     // Items and outfits
 
     val virtualClosetUiState: StateFlow<VirtualClosetUiState> = combine(
         itemRepository.getAllItemsStream(type = null),
-        outfitRepository.getAllOutfitsStream(query = null)
+        outfitRepository.getAllOutfitsStream(query = null),
     ) { items, outfits ->
         VirtualClosetUiState(itemList = items, outfitList = outfits)
     }.stateIn(
@@ -33,6 +38,22 @@ class VirtualClosetViewModel(
         started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
         initialValue = VirtualClosetUiState()
     )
+
+    var brandUiState: BrandUiState by mutableStateOf(BrandUiState.Loading)
+        private set
+
+    init {
+        viewModelScope.launch {
+            brandUiState = try {
+                val result = brandRepository.getBrands()
+                BrandUiState.Success(result)
+            } catch (e: IOException) {
+                BrandUiState.Error
+            } catch (e: HttpException) {
+                BrandUiState.Error
+            }
+        }
+    }
 
     private val _selectedItems = mutableStateOf<List<Int>>(emptyList())
     val selectedItems: State<List<Int>> = _selectedItems
@@ -104,7 +125,8 @@ class VirtualClosetViewModel(
                 val application = (this[APPLICATION_KEY] as VirtualClosetApplication)
                 val itemRepository = application.container.itemRepository
                 val outfitRepository = application.container.outfitRepository
-                VirtualClosetViewModel(itemRepository, outfitRepository)
+                val brandRepository = application.container.brandRepository
+                VirtualClosetViewModel(itemRepository, outfitRepository, brandRepository)
             }
         }
     }

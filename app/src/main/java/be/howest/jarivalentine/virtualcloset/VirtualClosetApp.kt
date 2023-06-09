@@ -96,6 +96,7 @@ fun VirtualClosetApp(
                     name = itemUiState.name,
                     type = itemUiState.type,
                     isActive = itemUiState.actionEnabled,
+                    viewModel = viewModel
                 )
             }
             composable(route = VirtualClosetScreen.CreateOutfit.name) {
@@ -118,6 +119,7 @@ fun VirtualClosetApp(
                     name = outfitUiState.name,
                     type = outfitUiState.label,
                     isActive = outfitUiState.actionEnabled,
+                    viewModel = null
                 )
             }
             composable(route = VirtualClosetScreen.Profile.name) {

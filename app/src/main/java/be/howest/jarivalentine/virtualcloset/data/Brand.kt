@@ -8,5 +8,5 @@ data class Brand(
     @SerialName("brand_name")
     var brandName: String,
     @SerialName("brand_logo_url")
-    var brandLogoUrl: String
+    var brandLogoUrl: String? = null,
 )
