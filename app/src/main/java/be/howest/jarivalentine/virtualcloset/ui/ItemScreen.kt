@@ -113,15 +113,8 @@ fun ClosetItem(
             modifier = modifier
                 .padding(10.dp)
                 .combinedClickable(
-                    onLongClick = {
-                        if (!selecting) {
-                            onSelect(item.id)
-                        }
-                    },
                     onClick = {
-                        if (selecting) {
-                            onSelect(item.id)
-                        }
+                        onSelect(item.id)
                     }
                 ),
             elevation = 8.dp

@@ -138,35 +138,37 @@ fun Outfit(outfit: Outfit) {
 @Composable
 fun IntentOptions(name: String) {
     val context = LocalContext.current;
-    Icon(
-        imageVector = Icons.Filled.Share,
-        contentDescription = "More",
-        modifier = Modifier
-            .size(50.dp)
-            .padding(10.dp)
-            .clickable {
-                val shareText = "I am wearing $name today!"
-                val intent = Intent(Intent.ACTION_SEND).apply {
-                    type = "text/plain"
-                    putExtra(Intent.EXTRA_TEXT, shareText)
-                }
-                val shareIntent = Intent.createChooser(intent, null)
+    Row {
+        Icon(
+            imageVector = Icons.Filled.Share,
+            contentDescription = "More",
+            modifier = Modifier
+                .size(50.dp)
+                .padding(10.dp)
+                .clickable {
+                    val shareText = "I am wearing $name today!"
+                    val intent = Intent(Intent.ACTION_SEND).apply {
+                        type = "text/plain"
+                        putExtra(Intent.EXTRA_TEXT, shareText)
+                    }
+                    val shareIntent = Intent.createChooser(intent, null)
 
-                context.startActivity(shareIntent)
-            },
-        tint = MaterialTheme.colors.onSurface
-    )
-    Icon(
-        imageVector = Icons.Filled.DateRange,
-        contentDescription = "More",
-        modifier = Modifier
-            .size(50.dp)
-            .padding(10.dp)
-            .clickable {
-                showDatePickerDialog(context, name)
-            },
-        tint = MaterialTheme.colors.onSurface
-    )
+                    context.startActivity(shareIntent)
+                },
+            tint = MaterialTheme.colors.onSurface
+        )
+        Icon(
+            imageVector = Icons.Filled.DateRange,
+            contentDescription = "More",
+            modifier = Modifier
+                .size(50.dp)
+                .padding(10.dp)
+                .clickable {
+                    showDatePickerDialog(context, name)
+                },
+            tint = MaterialTheme.colors.onSurface
+        )
+    }
 }
 
 private fun showDatePickerDialog(context: Context, outfitName: String) {

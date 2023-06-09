@@ -25,18 +25,25 @@ fun CreateScreen(
     isActive: Boolean,
     viewModel: VirtualClosetViewModel?
 ) {
+    val case = if (viewModel != null) "item" else "outfit"
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        NameTextField(name = name, onValueChange = onNameValueChange)
+        NameTextField(name = name, onValueChange = onNameValueChange, case = case)
         if (viewModel != null) {
             val brandUiState = viewModel.brandUiState
-            BrandDropdown(type = type, onValueChange = onTypeValueChange, brandUiState = brandUiState)
+            BrandDropdown(
+                type = type,
+                onValueChange = onTypeValueChange,
+                brandUiState = brandUiState,
+                case = case
+            )
+            TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = tags)
         } else {
-            TypeDropdown(type = type, onValueChange = onTypeValueChange)
+            TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = labels)
         }
         ImageUploadButton()
         ControlButtons(
@@ -52,7 +59,7 @@ fun CreateScreen(
 }
 
 @Composable
-fun NameTextField(name: String, onValueChange: (String) -> Unit) {
+fun NameTextField(name: String, onValueChange: (String) -> Unit, case: String) {
     OutlinedTextField(
         value = name,
         onValueChange = { onValueChange(it) },
@@ -63,21 +70,21 @@ fun NameTextField(name: String, onValueChange: (String) -> Unit) {
             unfocusedLabelColor = MaterialTheme.colors.primary,
             textColor = MaterialTheme.colors.onSurface
         ),
-        label = { Text(text = stringResource(R.string.text_name)) },
+        label = { Text(text = "$case name") },
         singleLine = true
     )
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun TypeDropdown(type: String, onValueChange: (String) -> Unit) {
+fun TypeDropdown(type: String, onValueChange: (String) -> Unit, case: String, types: List<String>) {
     var expanded by remember {
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        DropdownTextField(type, expanded)
+        DropdownTextField(type, expanded, "$case type")
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
-            tags.forEach { selected ->
+            types.forEach { selected ->
                 DropdownMenuItem(onClick = {
                     onValueChange(selected)
                     expanded = false
@@ -91,12 +98,17 @@ fun TypeDropdown(type: String, onValueChange: (String) -> Unit) {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun BrandDropdown(type: String, onValueChange: (String) -> Unit, brandUiState: BrandUiState) {
+fun BrandDropdown(
+    type: String,
+    onValueChange: (String) -> Unit,
+    brandUiState: BrandUiState,
+    case: String
+) {
     var expanded by remember {
         mutableStateOf(false)
     }
     ExposedDropdownMenuBox(expanded = expanded, onExpandedChange = { expanded = !expanded }) {
-        DropdownTextField(type, expanded)
+        DropdownTextField(type, expanded, label = "$case brand")
         ExposedDropdownMenu(expanded = expanded, onDismissRequest = { expanded = false }) {
             when (brandUiState) {
                 is BrandUiState.Loading -> {
@@ -104,6 +116,7 @@ fun BrandDropdown(type: String, onValueChange: (String) -> Unit, brandUiState: B
                         Text(text = "Loading...")
                     }
                 }
+
                 is BrandUiState.Success -> {
                     brandUiState.brands.forEach { brand ->
                         DropdownMenuItem(onClick = {
@@ -114,6 +127,7 @@ fun BrandDropdown(type: String, onValueChange: (String) -> Unit, brandUiState: B
                         }
                     }
                 }
+
                 is BrandUiState.Error -> {
                     DropdownMenuItem(onClick = {}) {
                         Text(text = "Error")
@@ -126,7 +140,7 @@ fun BrandDropdown(type: String, onValueChange: (String) -> Unit, brandUiState: B
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-fun DropdownTextField(selectedItem: String, isExpanded: Boolean) {
+fun DropdownTextField(selectedItem: String, isExpanded: Boolean, label: String) {
     OutlinedTextField(
         value = selectedItem,
         onValueChange = {},
@@ -138,7 +152,7 @@ fun DropdownTextField(selectedItem: String, isExpanded: Boolean) {
             unfocusedLabelColor = MaterialTheme.colors.primary,
             textColor = MaterialTheme.colors.onSurface
         ),
-        label = { Text(text = "item type") },
+        label = { Text(text = label) },
         trailingIcon = {
             ExposedDropdownMenuDefaults.TrailingIcon(
                 expanded = isExpanded

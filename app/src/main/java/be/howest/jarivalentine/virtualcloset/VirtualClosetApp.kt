@@ -52,7 +52,7 @@ fun VirtualClosetApp(
 
     Scaffold(
         topBar = {
-            TopBar(title = currentScreen.title, viewModel = viewModel, navController = navController)
+            TopBar(current = currentScreen, viewModel = viewModel, navController = navController)
         },
         bottomBar = {
             BottomNav(navController)
@@ -131,7 +131,7 @@ fun VirtualClosetApp(
 
 @Composable
 fun TopBar(
-    @StringRes title: Int,
+    current: VirtualClosetScreen,
     viewModel: VirtualClosetViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
@@ -149,13 +149,13 @@ fun TopBar(
                 .padding(start = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (viewModel.selecting.value) {
+            if (viewModel.selecting.value && current == VirtualClosetScreen.Item) {
                 SelectingRow(viewModel, onCreateOutfitClick = {
                     navController.navigate(VirtualClosetScreen.CreateOutfit.name)
                 })
             }
         }
-        TopBarTitle(title)
+        TopBarTitle(current.title)
     }
 }
 
