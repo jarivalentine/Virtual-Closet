@@ -3,6 +3,7 @@ package be.howest.jarivalentine.virtualcloset
 import android.annotation.SuppressLint
 import android.app.Application
 import android.content.Context
+import android.content.SharedPreferences
 import android.util.Log
 import androidx.work.OneTimeWorkRequestBuilder
 import androidx.work.PeriodicWorkRequest
@@ -25,11 +26,20 @@ class VirtualClosetApplication : Application() {
     }
 
     private fun scheduleUnavailableItemsWorker() {
-        val workRequest = PeriodicWorkRequestBuilder<LaundryReminderWorker>(
-            1,
-            TimeUnit.DAYS
-        ).build()
+        val sharedPreferences: SharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val isWorkerScheduled: Boolean = sharedPreferences.getBoolean("worker_scheduled", false)
 
-        WorkManager.getInstance(this).enqueue(workRequest)
+        if (!isWorkerScheduled) {
+            val workRequest = PeriodicWorkRequestBuilder<LaundryReminderWorker>(
+                1,
+                TimeUnit.DAYS
+            ).build()
+
+            WorkManager.getInstance(this).enqueue(workRequest)
+
+            val editor: SharedPreferences.Editor = sharedPreferences.edit()
+            editor.putBoolean("worker_scheduled", true)
+            editor.apply()
+        }
     }
 }
