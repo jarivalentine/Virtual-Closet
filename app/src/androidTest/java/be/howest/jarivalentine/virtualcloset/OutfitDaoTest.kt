@@ -18,7 +18,7 @@ import org.junit.runner.RunWith
 import java.io.IOException
 
 @RunWith(AndroidJUnit4::class)
-class OutfitDaoTests {
+class OutfitDaoTest {
 
     private lateinit var outfitDao: OutfitDao
     private lateinit var virtualClosetDatabase: VirtualClosetDatabase
