@@ -1,5 +1,10 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import androidx.compose.animation.core.LinearOutSlowInEasing
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyRow
@@ -14,9 +19,14 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -116,14 +126,39 @@ fun ClosetItem(
     selecting: Boolean,
     modifier: Modifier = Modifier
 ) {
-    Box {
+
+    val rotationAnimation = animateFloatAsState(
+        targetValue = if (selecting) 0.5f else -0.5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 100, easing = LinearOutSlowInEasing),
+            repeatMode = RepeatMode.Reverse
+        )
+    )
+
+    Box(
+        modifier = Modifier
+            .padding(8.dp)
+            .let {
+                if (!selecting) {
+                    it
+                } else {
+                    it.graphicsLayer(
+                        rotationZ = rotationAnimation.value
+                    )
+                }
+            }
+    ) {
         Card(
             modifier = modifier
-                .padding(10.dp)
                 .combinedClickable(
                     onClick = {
+                        if (selecting) {
+                            onSelect(item.id)
+                        }
+                    },
+                    onLongClick = {
                         onSelect(item.id)
-                    }
+                    },
                 ),
             elevation = 8.dp
         ) {
@@ -136,8 +171,8 @@ fun ClosetItem(
         }
         AsyncImage(
             modifier = Modifier
-                .width(75.dp)
-                .padding(20.dp),
+                .width(50.dp)
+                .padding(8.dp),
             model = ImageRequest.Builder(context = LocalContext.current)
                 .data(item.brandImage)
                 .crossfade(true)
@@ -148,8 +183,8 @@ fun ClosetItem(
         if (selecting) {
             Box(
                 modifier = Modifier
-                    .size(60.dp)
-                    .padding(15.dp)
+                    .size(50.dp)
+                    .padding(8.dp)
                     .background(Color.Black.copy(alpha = 0.5f), shape = CircleShape),
                 contentAlignment = Alignment.Center
             ) {
@@ -158,7 +193,7 @@ fun ClosetItem(
                         imageVector = Icons.Default.Check,
                         contentDescription = "Selected",
                         tint = Color.White,
-                        modifier = Modifier.size(25.dp)
+                        modifier = Modifier.size(20.dp)
                     )
                 }
             }
@@ -167,7 +202,6 @@ fun ClosetItem(
             Box(
                 modifier = Modifier
                     .matchParentSize()
-                    .padding(10.dp)
                     .background(Color.Gray.copy(alpha = 0.5f), shape = MaterialTheme.shapes.medium),
             )
         }
