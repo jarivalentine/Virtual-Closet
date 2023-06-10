@@ -90,6 +90,9 @@ fun VirtualClosetApp(
                     onTypeValueChange = {
                         viewModel.updateItemUiState(itemUiState.copy(type = it))
                     },
+                    onImageChange = {
+                        viewModel.updateItemUiState(itemUiState.copy(imageUri = it))
+                    },
                     onBrandValueChange = { name, url ->
                         viewModel.updateItemUiState(
                             itemUiState.copy(
@@ -102,7 +105,6 @@ fun VirtualClosetApp(
                     type = itemUiState.type,
                     brand = itemUiState.brand,
                     isActive = itemUiState.actionEnabled,
-                    navToCamera = { navController.navigate(VirtualClosetScreen.Camera.name) },
                     viewModel = viewModel
                 )
             }
@@ -123,10 +125,12 @@ fun VirtualClosetApp(
                     onTypeValueChange = {
                         viewModel.updateOutfitUiState(outfitUiState.copy(label = it))
                     },
+                    onImageChange = {
+                        viewModel.updateOutfitUiState(outfitUiState.copy(imageUri = it))
+                    },
                     name = outfitUiState.name,
                     type = outfitUiState.label,
                     isActive = outfitUiState.actionEnabled,
-                    navToCamera = { navController.navigate(VirtualClosetScreen.Camera.name) },
                     viewModel = null,
                     onBrandValueChange = null,
                     brand = null
@@ -134,9 +138,6 @@ fun VirtualClosetApp(
             }
             composable(route = VirtualClosetScreen.Profile.name) {
                 ProfileScreen(viewModel)
-            }
-            composable(route = VirtualClosetScreen.Camera.name) {
-                CameraScreen(viewModel)
             }
         }
     }

@@ -3,9 +3,12 @@ package be.howest.jarivalentine.virtualcloset.ui
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.ViewGroup
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY
@@ -15,17 +18,22 @@ import androidx.camera.core.UseCase
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.material.AlertDialog
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,11 +43,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
+import be.howest.jarivalentine.virtualcloset.R
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.rememberPermissionState
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -49,33 +62,20 @@ import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+
+val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
+
 @Composable
-fun CameraScreen(viewModel: VirtualClosetViewModel) {
-    val emptyImageUri = Uri.parse("file://dev/null")
+fun CameraScreen(exitCamera: () -> Unit, onImageChange: (String) -> Unit) {
+    val emptyImageUri = EMPTY_IMAGE_URI
     var imageUri by remember { mutableStateOf(emptyImageUri) }
-    if (imageUri != emptyImageUri) {
-        Box {
-            Image(
-                modifier = Modifier.fillMaxSize(),
-                painter = rememberAsyncImagePainter(imageUri),
-                contentDescription = "Captured image"
-            )
-            Button(
-                modifier = Modifier.align(Alignment.BottomCenter).padding(16.dp),
-                onClick = {
-                    imageUri = emptyImageUri
-                }
-            ) {
-                Text("Remove image")
-            }
+    CameraCapture(
+        onImageFile = { file ->
+            imageUri = file.toUri()
+            onImageChange(imageUri.toString())
+            exitCamera()
         }
-    } else {
-        CameraCapture(
-            onImageFile = { file ->
-                imageUri = file.toUri()
-            }
-        )
-    }
+    )
 }
 
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->
@@ -131,20 +131,25 @@ fun CameraCapture(
                         previewUseCase = it
                     }
                 )
-                Button(
+                Box(
                     modifier = Modifier
                         .wrapContentSize()
-                        .padding(16.dp)
                         .align(Alignment.BottomCenter),
-                    onClick = {
-                        coroutineScope.launch {
-                            imageCaptureUseCase.takePicture(context.executor).let {
-                                onImageFile(it)
-                            }
-                        }
-                    }
                 ) {
-                    Text("Click!")
+                    Image(
+                        painter = painterResource(id = R.drawable.button),
+                        contentDescription = "image button",
+                        modifier = Modifier
+                            .size(80.dp)
+                            .padding(10.dp)
+                            .clickable {
+                                coroutineScope.launch {
+                                    imageCaptureUseCase.takePicture(context.executor).let {
+                                        onImageFile(it)
+                                    }
+                                }
+                            }
+                    )
                 }
             }
             LaunchedEffect(previewUseCase) {
@@ -161,6 +166,49 @@ fun CameraCapture(
             }
         }
     }
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun Permission(
+    permission: String = android.Manifest.permission.CAMERA,
+    rationale: String = "This permission is important for this app. Please grant the permission.",
+    permissionNotAvailableContent: @Composable () -> Unit = { },
+    content: @Composable () -> Unit = { }
+) {
+    val permissionState = rememberPermissionState(permission)
+    PermissionRequired(
+        permissionState = permissionState,
+        permissionNotGrantedContent = {
+            Rationale(
+                text = rationale,
+                onRequestPermission = { permissionState.launchPermissionRequest() }
+            )
+        },
+        permissionNotAvailableContent = permissionNotAvailableContent,
+        content = content
+    )
+}
+
+@Composable
+private fun Rationale(
+    text: String,
+    onRequestPermission: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { /* Don't */ },
+        title = {
+            Text(text = "Permission request")
+        },
+        text = {
+            Text(text)
+        },
+        confirmButton = {
+            Button(onClick = onRequestPermission) {
+                Text("Ok")
+            }
+        }
+    )
 }
 
 @Composable
@@ -206,6 +254,7 @@ suspend fun ImageCapture.takePicture(executor: Executor): File {
             override fun onImageSaved(output: ImageCapture.OutputFileResults) {
                 continuation.resume(photoFile)
             }
+
             override fun onError(ex: ImageCaptureException) {
                 Log.e("TakePicture", "Image capture failed", ex)
                 continuation.resumeWithException(ex)

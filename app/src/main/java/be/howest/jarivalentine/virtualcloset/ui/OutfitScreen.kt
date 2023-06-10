@@ -33,6 +33,8 @@ import androidx.compose.ui.unit.sp
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Outfit
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
+import coil.compose.rememberAsyncImagePainter
+import coil.request.ImageRequest
 import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.PagerState
@@ -117,20 +119,15 @@ fun Outfits(
 @Composable
 fun Outfit(outfit: Outfit, availability: String, deleteOutfit: () -> Unit) {
     Card {
-        val configuration = LocalConfiguration.current
-        val screenHeight = configuration.screenHeightDp.dp
         Box(
             modifier = Modifier
                 .fillMaxWidth()
         ) {
-            Image(
-                painter = painterResource(id = R.drawable.outfit2),
-                contentDescription = outfit.name,
-                modifier = Modifier
-                    .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
-                    .height(screenHeight - 250.dp),
-                contentScale = ContentScale.Crop
-            )
+            if (outfit.imageUri.isNotEmpty()) {
+                OutfitImage(outfit.imageUri, outfit.name)
+            } else {
+                OutfitImagePlaceholder(outfit.name)
+            }
             Row(
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
@@ -153,6 +150,40 @@ fun Outfit(outfit: Outfit, availability: String, deleteOutfit: () -> Unit) {
             }
         }
     }
+}
+
+@Composable
+fun OutfitImage(imageUri: String, name: String) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current).data(data = imageUri).apply(block = fun ImageRequest.Builder.() {
+            crossfade(true)
+        }).build()
+    )
+
+    Image(
+        painter = painter,
+        contentDescription = name,
+        modifier = Modifier
+            .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
+            .height(screenHeight - 250.dp),
+        contentScale = ContentScale.Crop
+    )
+}
+
+@Composable
+fun OutfitImagePlaceholder(name: String) {
+    val configuration = LocalConfiguration.current
+    val screenHeight = configuration.screenHeightDp.dp
+    Image(
+        modifier = Modifier
+            .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
+            .height(screenHeight - 250.dp),
+        contentScale = ContentScale.Crop,
+        painter = painterResource(id = R.drawable.vertical_placeholder_image),
+        contentDescription = "Image Placeholder"
+    )
 }
 
 @Composable

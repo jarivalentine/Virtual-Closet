@@ -36,6 +36,8 @@ import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.data.Item
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import coil.compose.AsyncImage
+import coil.compose.rememberAsyncImagePainter
+import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
 
 val tags = listOf("Tops", "Bottoms", "Shoes", "Accessories")
@@ -128,9 +130,9 @@ fun ClosetItem(
 ) {
 
     val rotationAnimation = animateFloatAsState(
-        targetValue = if (selecting) 0.5f else -0.5f,
+        targetValue = if (selecting) 1f else -1f,
         animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 100, easing = LinearOutSlowInEasing),
+            animation = tween(durationMillis = 80, easing = LinearOutSlowInEasing),
             repeatMode = RepeatMode.Reverse
         )
     )
@@ -165,7 +167,11 @@ fun ClosetItem(
             Column(
                 modifier = Modifier.background(MaterialTheme.colors.primaryVariant)
             ) {
-                ClosetItemImage(item)
+                if (item.imageUri.isNotEmpty()) {
+                    ClosetItemImage(item.imageUri)
+                } else {
+                    ClosetItemImagePlaceholder()
+                }
                 ClosetItemText(item.name)
             }
         }
@@ -208,13 +214,30 @@ fun ClosetItem(
     }
 }
 
+
 @Composable
-fun ClosetItemImage(item: Item) {
+fun ClosetItemImage(imageUri: String) {
+    val painter = rememberAsyncImagePainter(
+        ImageRequest.Builder(LocalContext.current).data(data = imageUri).apply(block = fun ImageRequest.Builder.() {
+            crossfade(true)
+        }).build()
+    )
+
     Image(
-        modifier = Modifier.height(200.dp),
+        modifier = Modifier.height(200.dp).fillMaxWidth(),
         contentScale = ContentScale.Crop,
-        painter = painterResource(id = R.drawable.hoodie1),
-        contentDescription = item.name
+        painter = painter,
+        contentDescription = ""
+    )
+}
+
+@Composable
+fun ClosetItemImagePlaceholder() {
+    Image(
+        modifier = Modifier.height(200.dp).fillMaxWidth(),
+        contentScale = ContentScale.Crop,
+        painter = painterResource(id = R.drawable.vertical_placeholder_image),
+        contentDescription = "Image Placeholder"
     )
 }
 

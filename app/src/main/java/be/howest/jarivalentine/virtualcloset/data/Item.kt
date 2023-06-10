@@ -12,4 +12,5 @@ data class Item(
     val brand: String,
     val brandImage: String,
     val available: Boolean,
+    val imageUri: String,
 )

@@ -8,7 +8,8 @@ data class Outfit(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
-    val label: String
+    val label: String,
+    val imageUri: String
 )
 
 @Entity(tableName = "outfit_item", primaryKeys = ["outfitId", "itemId"])

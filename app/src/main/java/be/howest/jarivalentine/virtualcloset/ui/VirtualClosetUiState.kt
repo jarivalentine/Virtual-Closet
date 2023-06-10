@@ -22,6 +22,7 @@ data class ItemUiState(
     val brand: String = "",
     val brandImage: String = "",
     val available: Boolean = true,
+    val imageUri: String = "",
     val actionEnabled: Boolean = false
 )
 
@@ -35,6 +36,7 @@ fun ItemUiState.toItem(): Item = Item(
     type = type,
     brand = brand,
     brandImage = brandImage,
+    imageUri = imageUri,
     available = available
 )
 
@@ -42,6 +44,7 @@ data class OutfitUiState(
     val id: Int = 0,
     val name: String = "",
     val label: String = "",
+    val imageUri: String = "",
     val actionEnabled: Boolean = false
 )
 
@@ -52,5 +55,6 @@ fun OutfitUiState.isValid() : Boolean {
 fun OutfitUiState.toOutfit(): Outfit = Outfit(
     id = id,
     name = name,
-    label = label
+    label = label,
+    imageUri = imageUri
 )

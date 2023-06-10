@@ -3,9 +3,12 @@ package be.howest.jarivalentine.virtualcloset.ui
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
+import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.ViewGroup
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
@@ -39,51 +42,60 @@ fun CreateScreen(
     onCreateClick: () -> Unit,
     onNameValueChange: (String) -> Unit,
     onTypeValueChange: (String) -> Unit,
+    onImageChange: (String) -> Unit,
     name: String,
     type: String,
     brand: String?,
     isActive: Boolean,
     viewModel: VirtualClosetViewModel?,
     onBrandValueChange: ((String, String?) -> Unit)?,
-    navToCamera: () -> Unit,
 ) {
     val case = if (viewModel != null) "item" else "outfit"
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .padding(10.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp)
-    ) {
-        NameTextField(name = name, onValueChange = onNameValueChange, case = case)
-        if (viewModel != null && onBrandValueChange != null && brand != null) {
-            val brandUiState = viewModel.brandUiState
-            BrandDropdown(
-                brandName = brand,
-                onValueChange = onBrandValueChange,
-                brandUiState = brandUiState,
-                case = case
+    var showCamera by remember { mutableStateOf(false) }
+    if (showCamera) {
+        CameraScreen(exitCamera = { showCamera = false }, onImageChange = onImageChange)
+    } else {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(10.dp),
+            verticalArrangement = Arrangement.spacedBy(10.dp)
+        ) {
+            NameTextField(name = name, onValueChange = onNameValueChange, case = case)
+            if (viewModel != null && onBrandValueChange != null && brand != null) {
+                val brandUiState = viewModel.brandUiState
+                BrandDropdown(
+                    brandName = brand,
+                    onValueChange = onBrandValueChange,
+                    brandUiState = brandUiState,
+                    case = case
+                )
+                TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = tags)
+            } else {
+                TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = labels)
+            }
+            Row {
+                TakeImageButton(onClick = {
+                    showCamera = true
+                })
+            }
+            ControlButtons(
+                onCreateClick = {
+                    onCreateClick()
+                },
+                onCancelClick = {
+                    onCancelClick()
+                },
+                isActive = isActive
             )
-            TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = tags)
-        } else {
-            TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = labels)
         }
-        TakeImageButton(navToCamera)
-        ControlButtons(
-            onCreateClick = {
-                onCreateClick()
-            },
-            onCancelClick = {
-                onCancelClick()
-            },
-            isActive = isActive
-        )
     }
 }
 
 @Composable
-fun TakeImageButton(navToCamera: () -> Unit) {
+fun TakeImageButton(onClick: () -> Unit) {
     Button(
-        onClick = { navToCamera() },
+        onClick = { onClick() },
         modifier = Modifier.height(48.dp)
     ) {
         Icon(imageVector = Icons.Filled.Add, contentDescription = "Upload icon")
@@ -92,50 +104,6 @@ fun TakeImageButton(navToCamera: () -> Unit) {
             modifier = Modifier.padding(start = 15.dp)
         )
     }
-    Text(text = "no image uploaded", color = MaterialTheme.colors.onSurface)
-}
-
-@OptIn(ExperimentalPermissionsApi::class)
-@Composable
-fun Permission(
-    permission: String = android.Manifest.permission.CAMERA,
-    rationale: String = "This permission is important for this app. Please grant the permission.",
-    permissionNotAvailableContent: @Composable () -> Unit = { },
-    content: @Composable () -> Unit = { }
-) {
-    val permissionState = rememberPermissionState(permission)
-    PermissionRequired(
-        permissionState = permissionState,
-        permissionNotGrantedContent = {
-            Rationale(
-                text = rationale,
-                onRequestPermission = { permissionState.launchPermissionRequest() }
-            )
-        },
-        permissionNotAvailableContent = permissionNotAvailableContent,
-        content = content
-    )
-}
-
-@Composable
-private fun Rationale(
-    text: String,
-    onRequestPermission: () -> Unit
-) {
-    AlertDialog(
-        onDismissRequest = { /* Don't */ },
-        title = {
-            Text(text = "Permission request")
-        },
-        text = {
-            Text(text)
-        },
-        confirmButton = {
-            Button(onClick = onRequestPermission) {
-                Text("Ok")
-            }
-        }
-    )
 }
 
 @Composable
