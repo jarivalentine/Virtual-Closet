@@ -1,5 +1,15 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
+import android.provider.Settings
+import android.util.Log
+import android.view.ViewGroup
+import androidx.camera.core.CameraSelector
+import androidx.camera.core.Preview
+import androidx.camera.lifecycle.ProcessCameraProvider
+import androidx.camera.view.PreviewView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -8,9 +18,20 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.viewinterop.AndroidView
+import androidx.core.content.ContextCompat
 import be.howest.jarivalentine.virtualcloset.R
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.PermissionRequired
+import com.google.accompanist.permissions.rememberPermissionState
+import kotlinx.coroutines.launch
+import java.util.concurrent.Executor
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 @Composable
 fun CreateScreen(
@@ -24,6 +45,7 @@ fun CreateScreen(
     isActive: Boolean,
     viewModel: VirtualClosetViewModel?,
     onBrandValueChange: ((String, String?) -> Unit)?,
+    navToCamera: () -> Unit,
 ) {
     val case = if (viewModel != null) "item" else "outfit"
     Column(
@@ -45,7 +67,7 @@ fun CreateScreen(
         } else {
             TypeDropdown(type = type, onValueChange = onTypeValueChange, case = case, types = labels)
         }
-        ImageUploadButton()
+        TakeImageButton(navToCamera)
         ControlButtons(
             onCreateClick = {
                 onCreateClick()
@@ -56,6 +78,64 @@ fun CreateScreen(
             isActive = isActive
         )
     }
+}
+
+@Composable
+fun TakeImageButton(navToCamera: () -> Unit) {
+    Button(
+        onClick = { navToCamera() },
+        modifier = Modifier.height(48.dp)
+    ) {
+        Icon(imageVector = Icons.Filled.Add, contentDescription = "Upload icon")
+        Text(
+            text = stringResource(R.string.image_button),
+            modifier = Modifier.padding(start = 15.dp)
+        )
+    }
+    Text(text = "no image uploaded", color = MaterialTheme.colors.onSurface)
+}
+
+@OptIn(ExperimentalPermissionsApi::class)
+@Composable
+fun Permission(
+    permission: String = android.Manifest.permission.CAMERA,
+    rationale: String = "This permission is important for this app. Please grant the permission.",
+    permissionNotAvailableContent: @Composable () -> Unit = { },
+    content: @Composable () -> Unit = { }
+) {
+    val permissionState = rememberPermissionState(permission)
+    PermissionRequired(
+        permissionState = permissionState,
+        permissionNotGrantedContent = {
+            Rationale(
+                text = rationale,
+                onRequestPermission = { permissionState.launchPermissionRequest() }
+            )
+        },
+        permissionNotAvailableContent = permissionNotAvailableContent,
+        content = content
+    )
+}
+
+@Composable
+private fun Rationale(
+    text: String,
+    onRequestPermission: () -> Unit
+) {
+    AlertDialog(
+        onDismissRequest = { /* Don't */ },
+        title = {
+            Text(text = "Permission request")
+        },
+        text = {
+            Text(text)
+        },
+        confirmButton = {
+            Button(onClick = onRequestPermission) {
+                Text("Ok")
+            }
+        }
+    )
 }
 
 @Composable
@@ -160,21 +240,6 @@ fun DropdownTextField(selectedItem: String, isExpanded: Boolean, label: String) 
         },
         singleLine = true
     )
-}
-
-@Composable
-fun ImageUploadButton() {
-    Button(
-        onClick = { /*TODO*/ },
-        modifier = Modifier.height(48.dp)
-    ) {
-        Icon(imageVector = Icons.Filled.Add, contentDescription = "Upload icon")
-        Text(
-            text = stringResource(R.string.image_button),
-            modifier = Modifier.padding(start = 15.dp)
-        )
-    }
-    Text(text = "no image uploaded", color = MaterialTheme.colors.onSurface)
 }
 
 @Composable

@@ -8,7 +8,7 @@
     <string name="item_screen_title">my closet</string>
     <string name="menu">Menu</string>
     <string name="create_title">create item</string>
-    <string name="image_button">upload image</string>
+    <string name="image_button">Take image</string>
     <string name="cancel">cancel</string>
     <string name="next">create</string>
     <string name="text_name">item name</string>
@@ -24,4 +24,5 @@
     <string name="create_outfit">Create outfit</string>
     <string name="toggle_available">toggle available</string>
     <string name="logo_description">logo of brand</string>
+    <string name="camera_title">camera</string>
 </resources>

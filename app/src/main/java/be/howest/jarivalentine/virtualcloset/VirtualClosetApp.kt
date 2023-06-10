@@ -31,7 +31,8 @@ enum class VirtualClosetScreen(@StringRes val title: Int) {
     CreateItem(title = R.string.create_item_title),
     CreateOutfit(title = R.string.create_outfit_title),
     Outfit(title = R.string.outfit_title),
-    Profile(title = R.string.profile_title)
+    Profile(title = R.string.profile_title),
+    Camera(title = R.string.camera_title)
 }
 
 @Composable
@@ -101,6 +102,7 @@ fun VirtualClosetApp(
                     type = itemUiState.type,
                     brand = itemUiState.brand,
                     isActive = itemUiState.actionEnabled,
+                    navToCamera = { navController.navigate(VirtualClosetScreen.Camera.name) },
                     viewModel = viewModel
                 )
             }
@@ -124,6 +126,7 @@ fun VirtualClosetApp(
                     name = outfitUiState.name,
                     type = outfitUiState.label,
                     isActive = outfitUiState.actionEnabled,
+                    navToCamera = { navController.navigate(VirtualClosetScreen.Camera.name) },
                     viewModel = null,
                     onBrandValueChange = null,
                     brand = null
@@ -131,6 +134,9 @@ fun VirtualClosetApp(
             }
             composable(route = VirtualClosetScreen.Profile.name) {
                 ProfileScreen(viewModel)
+            }
+            composable(route = VirtualClosetScreen.Camera.name) {
+                CameraScreen(viewModel)
             }
         }
     }
