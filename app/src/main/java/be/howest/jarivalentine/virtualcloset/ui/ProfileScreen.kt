@@ -9,6 +9,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.Canvas
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.material.Button
 import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
@@ -18,17 +21,23 @@ import androidx.compose.material.icons.sharp.AccountBox
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.dp
+import java.lang.Math.cos
+import java.lang.Math.sin
 
 @Composable
 fun ProfileScreen(
     viewModel: VirtualClosetViewModel
 ) {
-    Column(
-        modifier = Modifier.padding(16.dp)
-    ) {
-        ProfileHeader()
+    Column {
+        Box {
+            WaveFigure()
+            ProfileHeader()
+        }
         Spacer(modifier = Modifier.height(16.dp))
         ProfileInfo()
         Spacer(modifier = Modifier.height(16.dp))
@@ -37,9 +46,47 @@ fun ProfileScreen(
 }
 
 @Composable
+fun WaveFigure() {
+    Canvas(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+    ) {
+        val canvasWidth = size.width
+        val canvasHeight = size.height
+
+        val waveAmplitude = canvasHeight * 0.5f
+        val waveOffset = waveAmplitude
+
+        val path = Path().apply {
+            moveTo(0f, waveOffset)
+            cubicTo(
+                canvasWidth * 0.2f, waveOffset - waveAmplitude,
+                canvasWidth * 0.8f, waveOffset - waveAmplitude,
+                canvasWidth, waveOffset
+            )
+            lineTo(canvasWidth, 0f)
+            lineTo(0f, 0f)
+            close()
+        }
+
+        val waveColor = Color(0xFF245953)
+
+        drawPath(
+            path = path,
+            color = waveColor,
+        )
+    }
+}
+
+@Composable
 fun ProfileHeader() {
     Row(
-        verticalAlignment = Alignment.CenterVertically
+        modifier = Modifier
+            .padding(top = 32.dp)
+            .fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Center
     ) {
         Icon(
             imageVector = Icons.Sharp.AccountBox,
@@ -65,7 +112,10 @@ fun ProfileHeader() {
 
 @Composable
 fun ProfileInfo() {
-    Column {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
         ProfileInfoItem("Email", "john.doe@example.com")
         Spacer(modifier = Modifier.height(8.dp))
         ProfileInfoItem("Phone", "+1 (123) 456-7890")
@@ -91,7 +141,10 @@ fun ProfileInfoItem(label: String, value: String) {
 
 @Composable
 fun ProfileActions() {
-    Column {
+    Column(
+        modifier = Modifier
+            .padding(16.dp)
+    ) {
         Button(
             onClick = { /* TODO */ },
             modifier = Modifier.fillMaxWidth()
