@@ -55,7 +55,7 @@ fun OutfitScreen(
             .padding(10.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp)
     ) {
-        SearchField()
+        SearchField(viewModel = viewModel)
         Outfits(
             outfits = uiState.outfitList,
             viewModel = viewModel
@@ -64,11 +64,14 @@ fun OutfitScreen(
 }
 
 @Composable
-fun SearchField() {
+fun SearchField(viewModel: VirtualClosetViewModel) {
     var text by remember { mutableStateOf("") }
     TextField(
         value = text,
-        onValueChange = { text = it },
+        onValueChange = {
+            text = it
+            viewModel.searchOutfits(it)
+        },
         modifier = Modifier
             .fillMaxWidth()
             .height(50.dp),

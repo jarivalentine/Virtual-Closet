@@ -14,7 +14,7 @@ interface OutfitDao {
     @Query("DELETE FROM outfit WHERE id = :id")
     suspend fun delete(id: Int)
 
-    @Query("SELECT * FROM outfit WHERE name LIKE :query OR :query IS NULL")
+    @Query("SELECT * FROM outfit WHERE name LIKE :query OR label LIKE :query OR season LIKE :query OR :query IS NULL")
     fun getAllOutfits(query: String?): Flow<List<Outfit>>
 
     suspend fun insertOutfitItems(outfitItems: List<OutfitItem>) {

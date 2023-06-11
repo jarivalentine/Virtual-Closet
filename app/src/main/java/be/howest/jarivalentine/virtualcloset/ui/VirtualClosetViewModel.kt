@@ -32,22 +32,26 @@ class VirtualClosetViewModel(
 ) : ViewModel() {
 
     // Items and outfits
+    val virtualClosetUiState: StateFlow<VirtualClosetUiState>
+        get() = _virtualClosetUiState
 
-    val virtualClosetUiState: StateFlow<VirtualClosetUiState> = combine(
-        itemRepository.getAllItemsStream(type = null),
-        outfitRepository.getAllOutfitsStream(query = null),
-    ) { items, outfits ->
-        VirtualClosetUiState(itemList = items, outfitList = outfits)
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(TIMEOUT_MILLIS),
-        initialValue = VirtualClosetUiState()
-    )
+    private val _virtualClosetUiState = MutableStateFlow(VirtualClosetUiState())
 
     var brandUiState: BrandUiState by mutableStateOf(BrandUiState.Loading)
         private set
 
     init {
+        viewModelScope.launch {
+            combine(
+                itemRepository.getAllItemsStream(type = null),
+                outfitRepository.getAllOutfitsStream(query = null)
+            ) { items, outfits ->
+                VirtualClosetUiState(itemList = items, outfitList = outfits)
+            }.collect { state ->
+                _virtualClosetUiState.value = state
+            }
+        }
+
         viewModelScope.launch {
             brandUiState = try {
                 val result = brandRepository.getBrands()
@@ -57,6 +61,15 @@ class VirtualClosetViewModel(
             } catch (e: HttpException) {
                 BrandUiState.Error
             }
+        }
+    }
+
+    fun searchOutfits(query: String) {
+        viewModelScope.launch {
+            val outfits = outfitRepository.getAllOutfitsStream(query = "%$query%").first()
+            val currentState = _virtualClosetUiState.value
+            val updatedState = currentState.copy(outfitList = outfits)
+            _virtualClosetUiState.value = updatedState
         }
     }
 
