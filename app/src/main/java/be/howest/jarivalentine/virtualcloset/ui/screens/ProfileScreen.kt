@@ -23,7 +23,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.unit.dp
-import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
 
 @Composable
 fun ProfileScreen() {
@@ -50,14 +49,13 @@ fun WaveFigure() {
         val canvasHeight = size.height
 
         val waveAmplitude = canvasHeight * 0.5f
-        val waveOffset = waveAmplitude
 
         val path = Path().apply {
-            moveTo(0f, waveOffset)
+            moveTo(0f, waveAmplitude)
             cubicTo(
-                canvasWidth * 0.2f, waveOffset - waveAmplitude,
-                canvasWidth * 0.8f, waveOffset - waveAmplitude,
-                canvasWidth, waveOffset
+                canvasWidth * 0.2f, waveAmplitude - waveAmplitude,
+                canvasWidth * 0.8f, waveAmplitude - waveAmplitude,
+                canvasWidth, waveAmplitude
             )
             lineTo(canvasWidth, 0f)
             lineTo(0f, 0f)

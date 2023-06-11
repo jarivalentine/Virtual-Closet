@@ -10,6 +10,7 @@ import be.howest.jarivalentine.virtualcloset.data.outfit.OutfitRepository
 import be.howest.jarivalentine.virtualcloset.data.VirtualClosetDatabase
 import be.howest.jarivalentine.virtualcloset.network.BrandApiService
 import com.jakewharton.retrofit2.converter.kotlinx.serialization.asConverterFactory
+import kotlinx.serialization.ExperimentalSerializationApi
 import kotlinx.serialization.json.Json
 import okhttp3.MediaType.Companion.toMediaType
 import retrofit2.Retrofit
@@ -21,7 +22,7 @@ interface AppContainer {
 }
 
 class AppDataContainer(private val context: Context) : AppContainer {
-    val json = Json { ignoreUnknownKeys = true }
+    private val json = Json { ignoreUnknownKeys = true }
 
     override val itemRepository: ItemRepository by lazy {
         OfflineItemRepository(VirtualClosetDatabase.getDatabase(context).itemDao())
@@ -34,6 +35,7 @@ class AppDataContainer(private val context: Context) : AppContainer {
     private val BASE_URL =
         "https://virtual-closet.hasura.app/api/rest/"
 
+    @OptIn(ExperimentalSerializationApi::class)
     private val retrofit = Retrofit.Builder()
         .addConverterFactory(json.asConverterFactory("application/json".toMediaType()))
         .baseUrl(BASE_URL)

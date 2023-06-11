@@ -69,9 +69,7 @@ fun createPendingIntent(appContext: Context): PendingIntent {
     // Flag to detect unsafe launches of intents for Android 12 and higher
     // to improve platform security
     var flags = PendingIntent.FLAG_UPDATE_CURRENT
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-        flags = flags or PendingIntent.FLAG_IMMUTABLE
-    }
+    flags = flags or PendingIntent.FLAG_IMMUTABLE
 
     return PendingIntent.getActivity(
         appContext,

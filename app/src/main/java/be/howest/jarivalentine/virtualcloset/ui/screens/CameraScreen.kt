@@ -139,9 +139,7 @@ fun CameraCapture(
                             .padding(10.dp)
                             .clickable {
                                 coroutineScope.launch {
-                                    imageCaptureUseCase.takePicture(context.executor).let {
-                                        onImageFile(it)
-                                    }
+                                    onImageFile(imageCaptureUseCase.takePicture(context.executor))
                                 }
                             }
                     )
@@ -166,7 +164,7 @@ fun CameraCapture(
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
 fun Permission(
-    permission: String = android.Manifest.permission.CAMERA,
+    permission: String = Manifest.permission.CAMERA,
     rationale: String = "This permission is important for this app. Please grant the permission.",
     permissionNotAvailableContent: @Composable () -> Unit = { },
     content: @Composable () -> Unit = { }

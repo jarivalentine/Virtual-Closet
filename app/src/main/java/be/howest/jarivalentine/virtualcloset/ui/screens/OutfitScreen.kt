@@ -1,5 +1,6 @@
 package be.howest.jarivalentine.virtualcloset.ui.screens
 
+import android.annotation.SuppressLint
 import android.app.DatePickerDialog
 import android.content.Context
 import android.content.Intent
@@ -90,6 +91,7 @@ fun SearchField(viewModel: VirtualClosetViewModel) {
     )
 }
 
+@SuppressLint("MutableCollectionMutableState")
 @OptIn(ExperimentalPagerApi::class)
 @Composable
 fun Outfits(
@@ -194,7 +196,7 @@ fun OutfitImagePlaceholder(name: String) {
 
 @Composable
 fun IntentOptions(name: String, deleteOutfit: () -> Unit) {
-    val context = LocalContext.current;
+    val context = LocalContext.current
     Row {
         Icon(
             imageVector = Icons.Filled.Share,
