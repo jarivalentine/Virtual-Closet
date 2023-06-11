@@ -73,6 +73,16 @@ class VirtualClosetViewModel(
         }
     }
 
+    fun filterItems(tag: String) {
+        viewModelScope.launch {
+            val type = if (tag == "All") null else tag
+            val items = itemRepository.getAllItemsStream(type = type).first()
+            val currentState = _virtualClosetUiState.value
+            val updatedState = currentState.copy(itemList = items)
+            _virtualClosetUiState.value = updatedState
+        }
+    }
+
     private val _selectedItems = mutableStateOf<List<Int>>(emptyList())
     val selectedItems: State<List<Int>> = _selectedItems
 

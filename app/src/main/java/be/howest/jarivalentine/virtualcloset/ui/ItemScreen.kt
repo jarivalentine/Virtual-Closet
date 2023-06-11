@@ -22,6 +22,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -39,20 +40,24 @@ import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter
 import coil.compose.rememberImagePainter
 import coil.request.ImageRequest
+import kotlinx.coroutines.launch
 
-val tags = listOf("Tops", "Bottoms", "Shoes", "Accessories")
+val tags = listOf("All", "Tops", "Bottoms", "Shoes", "Accessories")
 
 @Composable
 fun ItemScreen(
     viewModel: VirtualClosetViewModel
 ) {
     val uiState by viewModel.virtualClosetUiState.collectAsState()
-
     Column(
         modifier = Modifier
             .fillMaxHeight()
     ) {
-        FilterTags()
+        FilterTags(
+            filterItems = { tag ->
+                viewModel.filterItems(tag)
+            }
+        )
         ClosetItems(
             items = uiState.itemList,
             onSelect = viewModel::toggleSelect,
@@ -63,17 +68,21 @@ fun ItemScreen(
 }
 
 @Composable
-fun FilterTags() {
+fun FilterTags(filterItems: (String) -> Unit) {
+    val selectedTag = remember { mutableStateOf(tags.first()) }
     LazyRow {
-        items(tags) {
-            FilterTag(it)
+        items(tags) { tag ->
+            FilterTag(tag, selectedTag.value == tag) {
+                selectedTag.value = tag
+                filterItems(tag)
+            }
         }
     }
     Divider(thickness = 1.dp, color = MaterialTheme.colors.primary)
 }
 
 @Composable
-fun FilterTag(name: String) {
+fun FilterTag(name: String, isSelected: Boolean, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .padding(
@@ -82,12 +91,16 @@ fun FilterTag(name: String) {
                 bottom = 10.dp,
                 end = if (name == tags.last()) 10.dp else 0.dp
             )
-            .background(shape = Shapes.small, color = MaterialTheme.colors.secondary)
+            .background(
+                shape = Shapes.small,
+                color = if (isSelected) MaterialTheme.colors.primary else MaterialTheme.colors.secondary
+            )
+            .clickable { onClick() }
     ) {
         Text(
             modifier = Modifier.padding(5.dp),
             text = name,
-            color = MaterialTheme.colors.onSecondary,
+            color = if (isSelected) MaterialTheme.colors.onPrimary else MaterialTheme.colors.onSecondary,
         )
     }
 }
@@ -115,7 +128,7 @@ fun ClosetItems(
             }
         }
     } else {
-        Text(text = "You have no items in your closet", modifier = Modifier.padding(10.dp))
+        Text(text = "No items found", modifier = Modifier.padding(10.dp))
     }
 }
 

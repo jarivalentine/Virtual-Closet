@@ -318,7 +318,7 @@ fun SlidingCarousel(
             itemContent(page)
         }
         if (itemsCount == 0) {
-            Text(text = "Create outfits by clicking on items and favourite them!")
+            Text(text = "No outfits found")
         } else if (itemsCount > 1) {
             Surface(
                 modifier = Modifier
