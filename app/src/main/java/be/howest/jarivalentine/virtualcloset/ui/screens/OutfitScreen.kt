@@ -1,4 +1,4 @@
-package be.howest.jarivalentine.virtualcloset.ui
+package be.howest.jarivalentine.virtualcloset.ui.screens
 
 import android.app.DatePickerDialog
 import android.content.Context
@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.model.Outfit
+import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest

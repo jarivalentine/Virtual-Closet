@@ -1,14 +1,12 @@
-package be.howest.jarivalentine.virtualcloset.ui
+package be.howest.jarivalentine.virtualcloset.ui.screens
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import android.os.Build
 import android.provider.Settings
 import android.util.Log
 import android.view.ViewGroup
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.camera.core.CameraSelector
 import androidx.camera.core.ImageCapture
 import androidx.camera.core.ImageCapture.CAPTURE_MODE_MAXIMIZE_QUALITY
@@ -21,7 +19,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
@@ -33,7 +30,6 @@ import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -49,18 +45,13 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import androidx.core.net.toUri
 import be.howest.jarivalentine.virtualcloset.R
-import coil.compose.rememberAsyncImagePainter
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.PermissionRequired
 import com.google.accompanist.permissions.rememberPermissionState
-import com.google.mlkit.vision.common.InputImage
-import com.google.mlkit.vision.label.ImageLabeling
-import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.IOException
 import java.util.concurrent.Executor
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -102,7 +93,7 @@ fun CameraCapture(
 ) {
     val context = LocalContext.current
     Permission(
-        permission = android.Manifest.permission.CAMERA,
+        permission = Manifest.permission.CAMERA,
         rationale = "You said you wanted a picture, so I'm going to have to ask for permission.",
         permissionNotAvailableContent = {
             Column(modifier) {

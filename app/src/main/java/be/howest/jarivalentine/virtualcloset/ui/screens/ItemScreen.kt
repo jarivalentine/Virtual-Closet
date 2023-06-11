@@ -1,4 +1,4 @@
-package be.howest.jarivalentine.virtualcloset.ui
+package be.howest.jarivalentine.virtualcloset.ui.screens
 
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.RepeatMode
@@ -32,6 +32,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import be.howest.jarivalentine.virtualcloset.R
 import be.howest.jarivalentine.virtualcloset.model.Item
+import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import coil.compose.AsyncImage
 import coil.compose.rememberAsyncImagePainter

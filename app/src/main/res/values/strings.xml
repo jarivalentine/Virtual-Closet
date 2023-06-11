@@ -1,10 +1,6 @@
 <resources>
     <string name="app_name">VirtualCloset</string>
     <string name="home_title">Closet</string>
-    <string name="jeans1">Pepe Jeans</string>
-    <string name="shoes1">Nike Dunks</string>
-    <string name="jacket1">Carhartt Jacket</string>
-    <string name="hoodie1">Vintage Hoodie</string>
     <string name="item_screen_title">my closet</string>
     <string name="menu">Menu</string>
     <string name="create_title">create item</string>
@@ -13,8 +9,6 @@
     <string name="next">create</string>
     <string name="text_name">item name</string>
     <string name="search">search</string>
-    <string name="outfit1">Blue Nike Fit</string>
-    <string name="outfit2"><![CDATA[All Star, Denim & Green Jacket]]></string>
     <string name="item_title">items</string>
     <string name="create_item_title">create item</string>
     <string name="create_outfit_title">create outfit</string>

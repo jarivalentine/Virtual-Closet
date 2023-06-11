@@ -14,27 +14,17 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import be.howest.jarivalentine.virtualcloset.ui.*
+import be.howest.jarivalentine.virtualcloset.ui.navigation.VirtualClosetNavHost
+import be.howest.jarivalentine.virtualcloset.ui.navigation.NavigationDestination
 import kotlinx.coroutines.launch
-
-enum class VirtualClosetScreen(@StringRes val title: Int) {
-    Item(title = R.string.item_title),
-    CreateItem(title = R.string.create_item_title),
-    CreateOutfit(title = R.string.create_outfit_title),
-    Outfit(title = R.string.outfit_title),
-    Profile(title = R.string.profile_title),
-    Camera(title = R.string.camera_title)
-}
 
 @Composable
 fun VirtualClosetApp(
@@ -44,8 +34,8 @@ fun VirtualClosetApp(
 ) {
     val backStackEntry by navController.currentBackStackEntryAsState()
 
-    val currentScreen = VirtualClosetScreen.valueOf(
-        backStackEntry?.destination?.route ?: VirtualClosetScreen.Item.name
+    val currentScreen = NavigationDestination.valueOf(
+        backStackEntry?.destination?.route ?: NavigationDestination.Item.name
     )
 
     Scaffold(
@@ -56,98 +46,20 @@ fun VirtualClosetApp(
             BottomNav(navController)
         },
         floatingActionButton = {
-            if (currentScreen == VirtualClosetScreen.Item) {
-                FloatingActionButton(onClick = { navController.navigate(VirtualClosetScreen.CreateItem.name) }) {
+            if (currentScreen == NavigationDestination.Item) {
+                FloatingActionButton(onClick = { navController.navigate(NavigationDestination.CreateItem.name) }) {
                     Icon(imageVector = Icons.Rounded.Add, contentDescription = "Add")
                 }
             }
         },
     ) { innerPadding ->
-        NavHost(
-            navController = navController,
-            startDestination = VirtualClosetScreen.Item.name,
-            modifier = modifier.padding(innerPadding)
-        ) {
-            composable(route = VirtualClosetScreen.Item.name) {
-                ItemScreen(viewModel)
-            }
-            composable(route = VirtualClosetScreen.Outfit.name) {
-                OutfitScreen(viewModel)
-            }
-            composable(route = VirtualClosetScreen.CreateItem.name) {
-                val coroutineScope = rememberCoroutineScope()
-                val itemUiState = viewModel.itemUiState
-                CreateScreen(
-                    onCancelClick = { navController.popBackStack() },
-                    onCreateClick = {
-                        coroutineScope.launch {
-                            viewModel.saveItem()
-                            navController.navigateUp()
-                        }
-                    },
-                    onNameValueChange = {
-                        viewModel.updateItemUiState(itemUiState.copy(name = it))
-                    },
-                    onTypeValueChange = {
-                        viewModel.updateItemUiState(itemUiState.copy(type = it))
-                    },
-                    onImageChange = {
-                        viewModel.updateItemUiState(itemUiState.copy(imageUri = it))
-                    },
-                    onBrandValueChange = { name, url ->
-                        viewModel.updateItemUiState(
-                            itemUiState.copy(
-                                brand = name,
-                                brandImage = url ?: ""
-                            )
-                        )
-                    },
-                    name = itemUiState.name,
-                    type = itemUiState.type,
-                    brand = itemUiState.brand,
-                    isActive = itemUiState.actionEnabled,
-                    viewModel = viewModel
-                )
-            }
-            composable(route = VirtualClosetScreen.CreateOutfit.name) {
-                val coroutineScope = rememberCoroutineScope()
-                val outfitUiState = viewModel.outfitUiState
-                val context = LocalContext.current
-                CreateScreen(
-                    onCancelClick = { navController.popBackStack() },
-                    onCreateClick = {
-                        coroutineScope.launch {
-                            viewModel.saveOutfit(context)
-                            navController.navigate(VirtualClosetScreen.Outfit.name)
-                        }
-                    },
-                    onNameValueChange = {
-                        viewModel.updateOutfitUiState(outfitUiState.copy(name = it))
-                    },
-                    onTypeValueChange = {
-                        viewModel.updateOutfitUiState(outfitUiState.copy(season = it))
-                    },
-                    onImageChange = {
-                        viewModel.updateOutfitUiState(outfitUiState.copy(imageUri = it))
-                    },
-                    name = outfitUiState.name,
-                    type = outfitUiState.season,
-                    isActive = outfitUiState.actionEnabled,
-                    viewModel = null,
-                    onBrandValueChange = null,
-                    brand = null
-                )
-            }
-            composable(route = VirtualClosetScreen.Profile.name) {
-                ProfileScreen(viewModel)
-            }
-        }
+        VirtualClosetNavHost(modifier, innerPadding, navController, viewModel)
     }
 }
 
 @Composable
 fun TopBar(
-    current: VirtualClosetScreen,
+    current: NavigationDestination,
     viewModel: VirtualClosetViewModel,
     navController: NavHostController,
     modifier: Modifier = Modifier
@@ -165,9 +77,9 @@ fun TopBar(
                 .padding(start = 20.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
-            if (viewModel.selecting.value && current == VirtualClosetScreen.Item) {
+            if (viewModel.selecting.value && current == NavigationDestination.Item) {
                 SelectingRow(viewModel, onCreateOutfitClick = {
-                    navController.navigate(VirtualClosetScreen.CreateOutfit.name)
+                    navController.navigate(NavigationDestination.CreateOutfit.name)
                 })
             }
         }
@@ -236,13 +148,13 @@ fun BottomNav(navController: NavHostController, modifier: Modifier = Modifier) {
         horizontalArrangement = Arrangement.SpaceEvenly
     ) {
         BottomNavButton(Icons.Filled.Home) {
-            navController.navigate(VirtualClosetScreen.Item.name)
+            navController.navigate(NavigationDestination.Item.name)
         }
         BottomNavButton(Icons.Filled.Favorite) {
-            navController.navigate(VirtualClosetScreen.Outfit.name)
+            navController.navigate(NavigationDestination.Outfit.name)
         }
         BottomNavButton(Icons.Filled.AccountBox) {
-            navController.navigate(VirtualClosetScreen.Profile.name)
+            navController.navigate(NavigationDestination.Profile.name)
         }
     }
 }

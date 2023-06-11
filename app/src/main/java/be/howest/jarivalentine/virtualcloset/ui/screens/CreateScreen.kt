@@ -1,18 +1,5 @@
-package be.howest.jarivalentine.virtualcloset.ui
+package be.howest.jarivalentine.virtualcloset.ui.screens
 
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
-import android.os.Build
-import android.provider.Settings
-import android.util.Log
-import android.view.ViewGroup
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.camera.core.CameraSelector
-import androidx.camera.core.Preview
-import androidx.camera.lifecycle.ProcessCameraProvider
-import androidx.camera.view.PreviewView
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -21,20 +8,11 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.viewinterop.AndroidView
-import androidx.core.content.ContextCompat
 import be.howest.jarivalentine.virtualcloset.R
-import com.google.accompanist.permissions.ExperimentalPermissionsApi
-import com.google.accompanist.permissions.PermissionRequired
-import com.google.accompanist.permissions.rememberPermissionState
-import kotlinx.coroutines.launch
-import java.util.concurrent.Executor
-import kotlin.coroutines.resume
-import kotlin.coroutines.suspendCoroutine
+import be.howest.jarivalentine.virtualcloset.ui.BrandUiState
+import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
 
 @Composable
 fun CreateScreen(
