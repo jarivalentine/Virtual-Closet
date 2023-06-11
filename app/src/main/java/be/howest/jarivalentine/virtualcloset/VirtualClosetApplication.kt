@@ -27,7 +27,7 @@ class VirtualClosetApplication : Application() {
         if (!isWorkerScheduled) {
             val workRequest = PeriodicWorkRequestBuilder<LaundryReminderWorker>(
                 1,
-                TimeUnit.MINUTES
+                TimeUnit.DAYS
             ).build()
 
             WorkManager.getInstance(this).enqueue(workRequest)
