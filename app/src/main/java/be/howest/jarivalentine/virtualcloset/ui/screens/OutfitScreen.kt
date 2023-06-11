@@ -188,7 +188,7 @@ fun OutfitImagePlaceholder(name: String) {
             .height(screenHeight - 250.dp),
         contentScale = ContentScale.Crop,
         painter = painterResource(id = R.drawable.vertical_placeholder_image),
-        contentDescription = "Image Placeholder"
+        contentDescription = "Image Placeholder for $name"
     )
 }
 
