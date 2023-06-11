@@ -175,7 +175,7 @@ fun OutfitImage(imageUri: String, name: String) {
         contentDescription = name,
         modifier = Modifier
             .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
-            .height(screenHeight - 250.dp),
+            .height(screenHeight - 260.dp),
         contentScale = ContentScale.Crop
     )
 }
@@ -325,7 +325,7 @@ fun SlidingCarousel(
         } else if (itemsCount > 1) {
             Surface(
                 modifier = Modifier
-                    .padding(vertical = 10.dp)
+                    .padding(top = 10.dp)
                     .align(Alignment.CenterHorizontally),
                 shape = CircleShape,
                 color = MaterialTheme.colors.primaryVariant
