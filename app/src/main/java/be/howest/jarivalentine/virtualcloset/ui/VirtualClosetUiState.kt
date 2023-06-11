@@ -43,18 +43,20 @@ fun ItemUiState.toItem(): Item = Item(
 data class OutfitUiState(
     val id: Int = 0,
     val name: String = "",
+    val season: String = "",
     val label: String = "",
     val imageUri: String = "",
     val actionEnabled: Boolean = false
 )
 
 fun OutfitUiState.isValid() : Boolean {
-    return name.isNotBlank() && label.isNotBlank()
+    return name.isNotBlank() && season.isNotBlank()
 }
 
 fun OutfitUiState.toOutfit(): Outfit = Outfit(
     id = id,
     name = name,
+    season = season,
     label = label,
     imageUri = imageUri
 )

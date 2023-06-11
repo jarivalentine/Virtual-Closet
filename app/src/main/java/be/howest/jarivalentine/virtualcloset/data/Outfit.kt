@@ -8,6 +8,7 @@ data class Outfit(
     @PrimaryKey(autoGenerate = true)
     val id: Int,
     val name: String,
+    val season: String,
     val label: String,
     val imageUri: String
 )

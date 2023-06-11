@@ -74,47 +74,13 @@ fun CameraScreen(exitCamera: () -> Unit, onImageChange: (String) -> Unit) {
     val emptyImageUri = EMPTY_IMAGE_URI
     var imageUri by remember { mutableStateOf(emptyImageUri) }
     val context = LocalContext.current
-    val coroutineScope = rememberCoroutineScope()
     CameraCapture(
         onImageFile = { file ->
             imageUri = file.toUri()
             onImageChange(imageUri.toString())
-            labelImage(imageUri, context)
+            exitCamera()
         }
     )
-}
-
-fun labelImage(imageUri: Uri, context: Context) {
-    val image: InputImage
-    val types = listOf(
-        "Shorts", "Blazer", "Denim", "Fur", "Knitting", "Swimwear", "Dress"
-    )
-    val matches = mutableListOf<Pair<String, Float>>()
-    try {
-        image = InputImage.fromFilePath(context, imageUri)
-        val labelerOptions = ImageLabelerOptions.Builder()
-            .setConfidenceThreshold(0.5f)
-            .build()
-        val labeler = ImageLabeling.getClient(labelerOptions)
-
-
-        labeler.process(image)
-            .addOnSuccessListener { labels ->
-                for (label in labels) {
-                    val text = label.text
-                    val confidence = label.confidence
-                    if (types.contains(text)) {
-                        matches.add(Pair(text, confidence))
-                    }
-                }
-                Log.d("LABEL", matches.toString())
-            }
-            .addOnFailureListener { e ->
-                Log.d("LABEL", e.toString())
-            }
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
 }
 
 suspend fun Context.getCameraProvider(): ProcessCameraProvider = suspendCoroutine { continuation ->

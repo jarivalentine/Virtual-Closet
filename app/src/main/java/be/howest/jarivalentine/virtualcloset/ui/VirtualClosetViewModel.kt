@@ -1,10 +1,12 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProvider.AndroidViewModelFactory.Companion.APPLICATION_KEY
@@ -15,6 +17,9 @@ import be.howest.jarivalentine.virtualcloset.VirtualClosetApplication
 import be.howest.jarivalentine.virtualcloset.data.BrandRepository
 import be.howest.jarivalentine.virtualcloset.data.ItemRepository
 import be.howest.jarivalentine.virtualcloset.data.OutfitRepository
+import com.google.mlkit.vision.common.InputImage
+import com.google.mlkit.vision.label.ImageLabeling
+import com.google.mlkit.vision.label.defaults.ImageLabelerOptions
 import kotlinx.coroutines.flow.*
 import kotlinx.coroutines.launch
 import retrofit2.HttpException
@@ -93,13 +98,49 @@ class VirtualClosetViewModel(
         outfitUiState = outfit.copy(actionEnabled = outfit.isValid())
     }
 
-    suspend fun saveOutfit() {
+    suspend fun saveOutfit(context: Context) {
+        labelImage(outfitUiState.imageUri, context)
         val newOutfit = outfitUiState.toOutfit()
         val selectedItems = _selectedItems.value
         outfitRepository.insertOutfitWithItems(newOutfit, selectedItems)
         _selectedItems.value = emptyList()
         _selecting.value = false
         outfitUiState = OutfitUiState()
+    }
+
+    private fun labelImage(imageUri: String, context: Context) {
+        val image: InputImage
+        val types = listOf(
+            "Shorts", "Blazer", "Denim", "Fur", "Knitting", "Swimwear", "Dress"
+        )
+        val matches = mutableListOf<Pair<String, Float>>()
+        try {
+            image = InputImage.fromFilePath(context, imageUri.toUri())
+            val labelerOptions = ImageLabelerOptions.Builder()
+                .setConfidenceThreshold(0.5f)
+                .build()
+            val labeler = ImageLabeling.getClient(labelerOptions)
+
+
+            labeler.process(image)
+                .addOnSuccessListener { labels ->
+                    for (label in labels) {
+                        val text = label.text
+                        val confidence = label.confidence
+                        if (types.contains(text)) {
+                            matches.add(Pair(text, confidence))
+                        }
+                    }
+                    val bestMatch = matches.maxByOrNull { it.second }
+                    updateOutfitUiState(
+                        outfitUiState.copy(
+                            label = bestMatch?.first ?: "",
+                        )
+                    )
+                }
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
     }
 
     suspend fun hasUnavailableItems(id: Int): Boolean {

@@ -14,6 +14,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -111,11 +112,12 @@ fun VirtualClosetApp(
             composable(route = VirtualClosetScreen.CreateOutfit.name) {
                 val coroutineScope = rememberCoroutineScope()
                 val outfitUiState = viewModel.outfitUiState
+                val context = LocalContext.current
                 CreateScreen(
                     onCancelClick = { navController.popBackStack() },
                     onCreateClick = {
                         coroutineScope.launch {
-                            viewModel.saveOutfit()
+                            viewModel.saveOutfit(context)
                             navController.navigate(VirtualClosetScreen.Outfit.name)
                         }
                     },
@@ -123,13 +125,13 @@ fun VirtualClosetApp(
                         viewModel.updateOutfitUiState(outfitUiState.copy(name = it))
                     },
                     onTypeValueChange = {
-                        viewModel.updateOutfitUiState(outfitUiState.copy(label = it))
+                        viewModel.updateOutfitUiState(outfitUiState.copy(season = it))
                     },
                     onImageChange = {
                         viewModel.updateOutfitUiState(outfitUiState.copy(imageUri = it))
                     },
                     name = outfitUiState.name,
-                    type = outfitUiState.label,
+                    type = outfitUiState.season,
                     isActive = outfitUiState.actionEnabled,
                     viewModel = null,
                     onBrandValueChange = null,

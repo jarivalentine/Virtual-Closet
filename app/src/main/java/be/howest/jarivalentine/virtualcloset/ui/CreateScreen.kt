@@ -48,7 +48,7 @@ fun CreateScreen(
     brand: String?,
     isActive: Boolean,
     viewModel: VirtualClosetViewModel?,
-    onBrandValueChange: ((String, String?) -> Unit)?,
+    onBrandValueChange: ((String, String?) -> Unit)?
 ) {
     val case = if (viewModel != null) "item" else "outfit"
     var showCamera by remember { mutableStateOf(false) }

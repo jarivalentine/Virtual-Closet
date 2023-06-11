@@ -128,25 +128,27 @@ fun Outfit(outfit: Outfit, availability: String, deleteOutfit: () -> Unit) {
             } else {
                 OutfitImagePlaceholder(outfit.name)
             }
-            Row(
+            Column(
                 modifier = Modifier
                     .width(LocalConfiguration.current.screenWidthDp.dp - 20.dp)
                     .align(Alignment.BottomStart)
                     .background(MaterialTheme.colors.onSecondary.copy(alpha = 0.7f)),
-                horizontalArrangement = Arrangement.SpaceBetween
+                verticalArrangement = Arrangement.SpaceBetween
             ) {
-                Column(
+                Row(
                     modifier = Modifier
-                        .padding(10.dp)
+                        .padding(start = 10.dp, top = 10.dp)
+                        .fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
                 ) {
                     Text(
                         text = outfit.name,
                         fontSize = 20.sp,
                         color = MaterialTheme.colors.onSurface
                     )
-                    Labels(outfit.label, availability)
+                    IntentOptions(outfit.name, deleteOutfit = deleteOutfit)
                 }
-                IntentOptions(outfit.name, deleteOutfit = deleteOutfit)
+                Labels(outfit.season, outfit.label, availability)
             }
         }
     }
@@ -194,8 +196,8 @@ fun IntentOptions(name: String, deleteOutfit: () -> Unit) {
             imageVector = Icons.Filled.Share,
             contentDescription = "More",
             modifier = Modifier
-                .size(50.dp)
-                .padding(10.dp)
+                .size(40.dp)
+                .padding(end = 10.dp)
                 .clickable {
                     val shareText = "I am wearing $name today!"
                     val intent = Intent(Intent.ACTION_SEND).apply {
@@ -212,8 +214,8 @@ fun IntentOptions(name: String, deleteOutfit: () -> Unit) {
             imageVector = Icons.Filled.DateRange,
             contentDescription = "More",
             modifier = Modifier
-                .size(50.dp)
-                .padding(10.dp)
+                .size(40.dp)
+                .padding(end = 10.dp)
                 .clickable {
                     showDatePickerDialog(context, name)
                 },
@@ -223,8 +225,8 @@ fun IntentOptions(name: String, deleteOutfit: () -> Unit) {
             imageVector = Icons.Filled.Delete,
             contentDescription = "More",
             modifier = Modifier
-                .size(50.dp)
-                .padding(10.dp)
+                .size(40.dp)
+                .padding(end = 10.dp)
                 .clickable {
                     deleteOutfit()
                 },
@@ -266,9 +268,11 @@ private fun showDatePickerDialog(context: Context, outfitName: String) {
 }
 
 @Composable
-fun Labels(label: String, availability: String) {
-    Row() {
-        Label(label)
+fun Labels(season: String, label: String, availability: String) {
+    Row {
+        if (label.isNotEmpty())
+            Label(label)
+        Label(season)
         Label(availability)
     }
 }
