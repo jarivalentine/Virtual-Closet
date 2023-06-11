@@ -83,6 +83,8 @@ class VirtualClosetViewModel(
         }
     }
 
+    // Selecting functionality
+
     private val _selectedItems = mutableStateOf<List<Int>>(emptyList())
     val selectedItems: State<List<Int>> = _selectedItems
 
@@ -191,8 +193,6 @@ class VirtualClosetViewModel(
     }
 
     companion object {
-        private const val TIMEOUT_MILLIS = 5_000L
-
         val Factory: ViewModelProvider.Factory = viewModelFactory {
             initializer {
                 val application = (this[APPLICATION_KEY] as VirtualClosetApplication)

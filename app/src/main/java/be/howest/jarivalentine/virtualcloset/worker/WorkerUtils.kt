@@ -8,7 +8,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
-import android.util.Log
 import androidx.core.app.ActivityCompat
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
@@ -52,6 +51,13 @@ fun makeLaundryReminderNotification(context: Context) {
         .setContentIntent(pendingIntent)
         .setAutoCancel(true)
 
+    if (ActivityCompat.checkSelfPermission(
+            context,
+            Manifest.permission.POST_NOTIFICATIONS
+        ) != PackageManager.PERMISSION_GRANTED
+    ) {
+        return
+    }
     NotificationManagerCompat.from(context).notify(NOTIFICATION_ID, builder.build())
 }
 

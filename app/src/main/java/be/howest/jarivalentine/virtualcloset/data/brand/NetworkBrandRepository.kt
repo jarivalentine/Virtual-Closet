@@ -1,6 +1,5 @@
 package be.howest.jarivalentine.virtualcloset.data.brand
 
-import be.howest.jarivalentine.virtualcloset.data.brand.BrandRepository
 import be.howest.jarivalentine.virtualcloset.model.Brand
 import be.howest.jarivalentine.virtualcloset.network.BrandApiService
 

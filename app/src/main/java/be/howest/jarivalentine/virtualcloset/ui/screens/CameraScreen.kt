@@ -64,7 +64,6 @@ val EMPTY_IMAGE_URI: Uri = Uri.parse("file://dev/null")
 fun CameraScreen(exitCamera: () -> Unit, onImageChange: (String) -> Unit) {
     val emptyImageUri = EMPTY_IMAGE_URI
     var imageUri by remember { mutableStateOf(emptyImageUri) }
-    val context = LocalContext.current
     CameraCapture(
         onImageFile = { file ->
             imageUri = file.toUri()
