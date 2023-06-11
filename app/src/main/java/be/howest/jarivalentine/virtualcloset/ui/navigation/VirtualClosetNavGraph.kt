@@ -99,7 +99,7 @@ fun VirtualClosetNavHost(
             )
         }
         composable(route = NavigationDestination.Profile.name) {
-            ProfileScreen(viewModel)
+            ProfileScreen()
         }
     }
 }

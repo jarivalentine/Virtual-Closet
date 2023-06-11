@@ -26,9 +26,7 @@ import androidx.compose.ui.unit.dp
 import be.howest.jarivalentine.virtualcloset.ui.VirtualClosetViewModel
 
 @Composable
-fun ProfileScreen(
-    viewModel: VirtualClosetViewModel
-) {
+fun ProfileScreen() {
     Column {
         Box {
             WaveFigure()
