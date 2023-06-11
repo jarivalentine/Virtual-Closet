@@ -1,4 +1,4 @@
-package be.howest.jarivalentine.virtualcloset.data
+package be.howest.jarivalentine.virtualcloset.model
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

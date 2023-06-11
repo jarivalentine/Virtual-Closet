@@ -1,6 +1,8 @@
-package be.howest.jarivalentine.virtualcloset.data
+package be.howest.jarivalentine.virtualcloset.data.outfit
 
 import androidx.room.*
+import be.howest.jarivalentine.virtualcloset.model.Outfit
+import be.howest.jarivalentine.virtualcloset.model.OutfitItem
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.withContext

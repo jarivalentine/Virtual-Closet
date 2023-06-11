@@ -1,6 +1,7 @@
-package be.howest.jarivalentine.virtualcloset.data
+package be.howest.jarivalentine.virtualcloset.data.item
 
 import androidx.room.*
+import be.howest.jarivalentine.virtualcloset.model.Item
 import kotlinx.coroutines.flow.Flow
 
 @Dao

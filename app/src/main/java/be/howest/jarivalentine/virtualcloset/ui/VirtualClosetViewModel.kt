@@ -14,9 +14,9 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import be.howest.jarivalentine.virtualcloset.VirtualClosetApplication
-import be.howest.jarivalentine.virtualcloset.data.BrandRepository
-import be.howest.jarivalentine.virtualcloset.data.ItemRepository
-import be.howest.jarivalentine.virtualcloset.data.OutfitRepository
+import be.howest.jarivalentine.virtualcloset.data.brand.BrandRepository
+import be.howest.jarivalentine.virtualcloset.data.item.ItemRepository
+import be.howest.jarivalentine.virtualcloset.data.outfit.OutfitRepository
 import com.google.mlkit.vision.common.InputImage
 import com.google.mlkit.vision.label.ImageLabeling
 import com.google.mlkit.vision.label.defaults.ImageLabelerOptions

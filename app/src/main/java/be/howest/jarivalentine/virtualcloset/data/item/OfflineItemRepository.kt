@@ -1,4 +1,8 @@
-package be.howest.jarivalentine.virtualcloset.data
+package be.howest.jarivalentine.virtualcloset.data.item
+
+import be.howest.jarivalentine.virtualcloset.data.item.ItemDao
+import be.howest.jarivalentine.virtualcloset.data.item.ItemRepository
+import be.howest.jarivalentine.virtualcloset.model.Item
 
 class OfflineItemRepository(private val itemDao: ItemDao) : ItemRepository {
 

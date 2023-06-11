@@ -1,5 +1,6 @@
-package be.howest.jarivalentine.virtualcloset.data;
+package be.howest.jarivalentine.virtualcloset.data.item;
 
+import be.howest.jarivalentine.virtualcloset.model.Item
 import kotlinx.coroutines.flow.Flow
 
 interface ItemRepository {

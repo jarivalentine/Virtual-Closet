@@ -1,8 +1,8 @@
 package be.howest.jarivalentine.virtualcloset.ui
 
-import be.howest.jarivalentine.virtualcloset.data.Brand
-import be.howest.jarivalentine.virtualcloset.data.Item
-import be.howest.jarivalentine.virtualcloset.data.Outfit
+import be.howest.jarivalentine.virtualcloset.model.Brand
+import be.howest.jarivalentine.virtualcloset.model.Item
+import be.howest.jarivalentine.virtualcloset.model.Outfit
 
 data class VirtualClosetUiState(
     val itemList: List<Item> = listOf(),

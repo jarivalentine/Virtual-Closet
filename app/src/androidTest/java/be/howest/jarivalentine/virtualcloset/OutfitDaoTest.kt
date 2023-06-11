@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Room
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import be.howest.jarivalentine.virtualcloset.data.Item
-import be.howest.jarivalentine.virtualcloset.data.Outfit
-import be.howest.jarivalentine.virtualcloset.data.OutfitDao
-import be.howest.jarivalentine.virtualcloset.data.OutfitItem
+import be.howest.jarivalentine.virtualcloset.model.Item
+import be.howest.jarivalentine.virtualcloset.model.Outfit
+import be.howest.jarivalentine.virtualcloset.data.outfit.OutfitDao
+import be.howest.jarivalentine.virtualcloset.model.OutfitItem
 import be.howest.jarivalentine.virtualcloset.data.VirtualClosetDatabase
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking

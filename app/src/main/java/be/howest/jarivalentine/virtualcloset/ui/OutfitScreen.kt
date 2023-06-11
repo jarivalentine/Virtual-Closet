@@ -31,7 +31,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import be.howest.jarivalentine.virtualcloset.R
-import be.howest.jarivalentine.virtualcloset.data.Outfit
+import be.howest.jarivalentine.virtualcloset.model.Outfit
 import be.howest.jarivalentine.virtualcloset.ui.theme.Shapes
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
