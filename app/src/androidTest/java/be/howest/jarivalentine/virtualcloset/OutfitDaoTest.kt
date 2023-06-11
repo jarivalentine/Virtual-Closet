@@ -38,12 +38,12 @@ class OutfitDaoTest {
         virtualClosetDatabase.close()
     }
 
-    private var outfit1 = Outfit(1, "Outfit 1", "Summer")
-    private var outfit2 = Outfit(2, "Outfit 2", "Winter")
-    private var item1 = Item(1, "Blue jacket", "Tops", "H&M", "https://i.imgur.com/pVOsyRO.png", true)
-    private var item2 = Item(2, "Black jeans", "Bottoms", "H&M", "https://i.imgur.com/pVOsyRO.png", true)
-    private var item3 = Item(3, "Red shoes", "Shoes", "Adidas", "https://i.imgur.com/OpIriXg.png", true)
-    private var item4 = Item(4, "White shoes", "Shoes", "Adidas", "https://i.imgur.com/OpIriXg.png", true)
+    private var outfit1 = Outfit(1, "Outfit 1", "Summer", "", "")
+    private var outfit2 = Outfit(2, "Outfit 2", "Winter", "", "")
+    private var item1 = Item(1, "Blue jacket", "Tops", "H&M", "https://i.imgur.com/pVOsyRO.png", true, "")
+    private var item2 = Item(2, "Black jeans", "Bottoms", "H&M", "https://i.imgur.com/pVOsyRO.png", true, "")
+    private var item3 = Item(3, "Red shoes", "Shoes", "Adidas", "https://i.imgur.com/OpIriXg.png", true, "")
+    private var item4 = Item(4, "White shoes", "Shoes", "Adidas", "https://i.imgur.com/OpIriXg.png", true, "")
 
     private suspend fun addOneOutfitToDb() {
         outfitDao.insert(outfit1)

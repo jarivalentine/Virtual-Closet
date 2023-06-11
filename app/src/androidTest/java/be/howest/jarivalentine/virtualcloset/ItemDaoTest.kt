@@ -37,8 +37,8 @@ class ItemDaoTest {
         virtualClosetDatabase.close()
     }
 
-    private var item1 = Item(1, "Blue jacket", "Tops", "H&M", "https://i.imgur.com/pVOsyRO.png", true)
-    private var item2 = Item(2, "Black jeans", "Bottoms", "H&M", "https://i.imgur.com/pVOsyRO.png", true)
+    private var item1 = Item(1, "Blue jacket", "Tops", "H&M", "https://i.imgur.com/pVOsyRO.png", true, "")
+    private var item2 = Item(2, "Black jeans", "Bottoms", "H&M", "https://i.imgur.com/pVOsyRO.png", true, "")
 
     private suspend fun addOneItemToDb() {
         itemDao.insert(item1)

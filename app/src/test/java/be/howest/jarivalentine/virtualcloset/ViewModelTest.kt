@@ -34,15 +34,15 @@ class VirtualClosetViewModelTest {
 
         coEvery { mockItemRepository.getAllItemsStream(null) } returns flowOf(
             listOf(
-                Item(1, "Blue jacket", "Tops", "H&M", "https://i.imgur.com/pVOsyRO.png", true),
-                Item(2, "Black jeans", "Bottoms", "H&M", "https://i.imgur.com/pVOsyRO.png", true)
+                Item(1, "Blue jacket", "Tops", "H&M", "https://i.imgur.com/pVOsyRO.png", true, ""),
+                Item(2, "Black jeans", "Bottoms", "H&M", "https://i.imgur.com/pVOsyRO.png", true, "")
             )
         )
 
         coEvery { mockOutfitRepository.getAllOutfitsStream(null) } returns flowOf(
             listOf(
-                Outfit(1, "Outfit 1", "Summer"),
-                Outfit(2, "Outfit 2", "Winter")
+                Outfit(1, "Outfit 1", "Summer", "", ""),
+                Outfit(2, "Outfit 2", "Winter", "", "")
             )
         )
 
